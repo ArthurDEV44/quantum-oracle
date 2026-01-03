@@ -8,6 +8,7 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
+import Link from "next/link";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -52,9 +53,12 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased bg-neutral-950 text-white`}
         >
           <header className="flex justify-between items-center p-4 border-b border-neutral-800">
-            <span className="text-lg font-semibold text-violet-400">
+            <Link
+              href="/"
+              className="text-lg font-semibold text-violet-400 hover:text-violet-300 transition-colors"
+            >
               Quantum Oracle
-            </span>
+            </Link>
             <nav className="flex gap-4 items-center">
               <SignedOut>
                 <SignInButton mode="modal">
@@ -69,6 +73,12 @@ export default function RootLayout({
                 </SignUpButton>
               </SignedOut>
               <SignedIn>
+                <Link
+                  href="/history"
+                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                >
+                  Historique
+                </Link>
                 <UserButton
                   appearance={{
                     elements: {

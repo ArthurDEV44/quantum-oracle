@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useUser } from "@clerk/nextjs";
 
 interface ConsultationResult {
@@ -11,6 +11,13 @@ interface ConsultationResult {
     timestamp: string;
     source: string;
   };
+  remaining?: number;
+}
+
+interface UsageStatus {
+  remaining: number;
+  used: number;
+  limit: number;
 }
 
 export default function Home() {
@@ -19,6 +26,25 @@ export default function Home() {
   const [result, setResult] = useState<ConsultationResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [usage, setUsage] = useState<UsageStatus | null>(null);
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      fetchUsage();
+    }
+  }, [isLoaded, isSignedIn]);
+
+  const fetchUsage = async () => {
+    try {
+      const response = await fetch("/api/usage");
+      if (response.ok) {
+        const data = await response.json();
+        setUsage(data);
+      }
+    } catch {
+      // Silent fail
+    }
+  };
 
   const handleConsult = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,19 +64,27 @@ export default function Home() {
         body: JSON.stringify({ question }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const data = await response.json();
         throw new Error(data.error || "Erreur lors de la consultation");
       }
 
-      const data = await response.json();
       setResult(data);
+      if (typeof data.remaining === "number") {
+        setUsage((prev) =>
+          prev ? { ...prev, remaining: data.remaining, used: prev.used + 1 } : null
+        );
+      }
+      setQuestion("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue");
     } finally {
       setIsLoading(false);
     }
   };
+
+  const isLimitReached = usage?.remaining === 0;
 
   return (
     <div className="min-h-[calc(100vh-73px)] flex flex-col items-center justify-center p-4">
@@ -78,32 +112,64 @@ export default function Home() {
             </p>
           </div>
         ) : (
-          <form onSubmit={handleConsult} className="space-y-6">
-            <div className="relative">
-              <textarea
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                placeholder="Posez votre question à l'univers..."
-                className="w-full h-32 px-6 py-4 bg-neutral-900 border border-neutral-800 rounded-2xl text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent resize-none"
-                disabled={isLoading}
-              />
-            </div>
+          <div className="space-y-6">
+            {usage && (
+              <div className="flex justify-center">
+                <div
+                  className={`px-4 py-2 rounded-full text-sm ${
+                    isLimitReached
+                      ? "bg-red-900/30 border border-red-800 text-red-300"
+                      : "bg-neutral-900 border border-neutral-800 text-neutral-400"
+                  }`}
+                >
+                  {isLimitReached ? (
+                    "Limite quotidienne atteinte"
+                  ) : (
+                    <>
+                      <span className="text-violet-400 font-semibold">
+                        {usage.remaining}
+                      </span>{" "}
+                      consultation{usage.remaining > 1 ? "s" : ""} restante
+                      {usage.remaining > 1 ? "s" : ""} aujourd&apos;hui
+                    </>
+                  )}
+                </div>
+              </div>
+            )}
 
-            <button
-              type="submit"
-              disabled={isLoading || !question.trim()}
-              className="w-full py-4 px-6 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 disabled:from-neutral-700 disabled:to-neutral-700 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-[1.02] disabled:hover:scale-100"
-            >
-              {isLoading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Consultation en cours...
+            <form onSubmit={handleConsult} className="space-y-6">
+              <div className="relative">
+                <textarea
+                  value={question}
+                  onChange={(e) => setQuestion(e.target.value)}
+                  placeholder="Posez votre question à l'univers..."
+                  className="w-full h-32 px-6 py-4 bg-neutral-900 border border-neutral-800 rounded-2xl text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent resize-none disabled:opacity-50"
+                  disabled={isLoading || isLimitReached}
+                  maxLength={500}
+                />
+                <span className="absolute bottom-3 right-3 text-xs text-neutral-600">
+                  {question.length}/500
                 </span>
-              ) : (
-                "Consulter l'Oracle"
-              )}
-            </button>
-          </form>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading || !question.trim() || isLimitReached}
+                className="w-full py-4 px-6 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 disabled:from-neutral-700 disabled:to-neutral-700 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-[1.02] disabled:hover:scale-100"
+              >
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    Consultation en cours...
+                  </span>
+                ) : isLimitReached ? (
+                  "Revenez demain"
+                ) : (
+                  "Consulter l'Oracle"
+                )}
+              </button>
+            </form>
+          </div>
         )}
 
         {error && (
