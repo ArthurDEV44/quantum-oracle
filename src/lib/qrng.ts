@@ -55,10 +55,7 @@ export async function getQuantumChoice<T>(options: T[]): Promise<T> {
   return options[index];
 }
 
-export function interpretQuantumResponse(
-  numbers: number[],
-  question: string
-): string {
+export function interpretQuantumResponse(numbers: number[]): string {
   const sum = numbers.reduce((a, b) => a + b, 0);
   const average = sum / numbers.length;
   const normalized = average / 255;

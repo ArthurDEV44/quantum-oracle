@@ -58,7 +58,7 @@ export async function POST(request: Request) {
 
     // Get quantum random numbers
     const quantumResult = await getQuantumRandomNumbers(8);
-    const response = interpretQuantumResponse(quantumResult.numbers, question);
+    const response = interpretQuantumResponse(quantumResult.numbers);
 
     // Save consultation to database
     const consultation = await saveConsultation(
