@@ -50,24 +50,26 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="fr">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-neutral-950 text-white`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background text-foreground`}
         >
-          <header className="flex justify-between items-center p-4 border-b border-neutral-800">
+          <div className="film-grain" />
+          <div className="volumetric-rays" />
+          <header className="relative z-20 flex justify-between items-center p-8 bg-transparent">
             <Link
               href="/"
-              className="text-lg font-semibold text-violet-400 hover:text-violet-300 transition-colors"
+              className="text-xs uppercase tracking-[0.4em] font-light text-foreground/80 hover:text-gold transition-colors"
             >
               Quantum Oracle
             </Link>
-            <nav className="flex gap-4 items-center">
+            <nav className="flex gap-8 items-center">
               <SignedOut>
                 <SignInButton mode="modal">
-                  <button className="px-4 py-2 text-sm text-neutral-300 hover:text-white transition-colors">
+                  <button className="text-[10px] uppercase tracking-[0.3em] font-medium text-foreground/60 hover:text-foreground transition-colors">
                     Connexion
                   </button>
                 </SignInButton>
                 <SignUpButton mode="modal">
-                  <button className="px-4 py-2 text-sm bg-violet-600 hover:bg-violet-500 rounded-lg transition-colors">
+                  <button className="px-5 py-2 text-[10px] uppercase tracking-[0.3em] font-medium border border-foreground/10 hover:border-gold/50 transition-colors">
                     S&apos;inscrire
                   </button>
                 </SignUpButton>
@@ -75,21 +77,21 @@ export default function RootLayout({
               <SignedIn>
                 <Link
                   href="/history"
-                  className="text-sm text-neutral-400 hover:text-white transition-colors"
+                  className="text-[10px] uppercase tracking-[0.3em] font-medium text-foreground/60 hover:text-foreground transition-colors"
                 >
                   Historique
                 </Link>
                 <UserButton
                   appearance={{
                     elements: {
-                      avatarBox: "w-10 h-10",
+                      avatarBox: "w-8 h-8 rounded-none border border-foreground/20",
                     },
                   }}
                 />
               </SignedIn>
             </nav>
           </header>
-          <main>{children}</main>
+          <main className="relative z-10">{children}</main>
         </body>
       </html>
     </ClerkProvider>

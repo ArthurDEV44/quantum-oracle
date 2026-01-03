@@ -87,129 +87,141 @@ export default function Home() {
   const isLimitReached = usage?.remaining === 0;
 
   return (
-    <div className="min-h-[calc(100vh-73px)] flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-2xl mx-auto text-center space-y-8">
-        <div className="space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-violet-400 to-purple-600 bg-clip-text text-transparent">
+    <div className="min-h-[calc(100vh-100px)] flex flex-col items-center justify-center p-8 relative">
+      {/* Centerpiece: Floating Qubit Sphere */}
+      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-0 opacity-50 md:opacity-100">
+        <div className="relative">
+          {/* Main Sphere */}
+          <div className="w-48 h-48 md:w-64 md:h-64 bg-white rounded-full animate-float shadow-[0_0_80px_rgba(255,255,255,0.4)] relative overflow-hidden">
+            {/* Texture/Glow on Sphere */}
+            <div className="absolute inset-0 bg-linear-to-tr from-transparent via-white/20 to-white/50" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,1),transparent_70%)]" />
+          </div>
+          
+          {/* Gold Interference Patterns (Thin lines) */}
+          <div className="absolute inset-0 flex items-center justify-center animate-golden-glow">
+            <div className="w-[120%] h-px bg-gold/30 rotate-12 blur-[1px]" />
+            <div className="w-[120%] h-px bg-gold/20 -rotate-45 blur-[1px] delay-700" />
+            <div className="absolute w-[150%] h-[150%] rounded-full border border-gold/10 scale-90" />
+            <div className="absolute w-[180%] h-[180%] rounded-full border border-gold/5 scale-110" />
+          </div>
+          
+          {/* Divine Light Rays (CSS) */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-gold/5 blur-[80px] rounded-full" />
+        </div>
+      </div>
+
+      <div className="w-full max-w-2xl mx-auto text-center space-y-24 relative z-10 bg-background/40 backdrop-blur-sm p-12 rounded-3xl">
+        <div className="space-y-6">
+          <h1 className="text-sm md:text-base font-medium uppercase tracking-[1em] text-foreground animate-fade-in">
             Quantum Oracle
           </h1>
-          <p className="text-neutral-400 text-lg max-w-md mx-auto">
-            Posez votre question et laissez l&apos;univers quantique vous
-            guider. Chaque réponse est générée par un vrai générateur de nombres
-            aléatoires quantiques.
-          </p>
+          <div className="w-12 h-px bg-gold mx-auto animate-fade-in" />
         </div>
 
-        {!isLoaded ? (
-          <div className="animate-pulse text-neutral-500">Chargement...</div>
-        ) : !isSignedIn ? (
-          <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-8 space-y-4">
-            <p className="text-neutral-300">
-              Connectez-vous pour consulter l&apos;Oracle Quantique
-            </p>
-            <p className="text-sm text-neutral-500">
-              3 consultations gratuites par jour
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {usage && (
-              <div className="flex justify-center">
-                <div
-                  className={`px-4 py-2 rounded-full text-sm ${
-                    isLimitReached
-                      ? "bg-red-900/30 border border-red-800 text-red-300"
-                      : "bg-neutral-900 border border-neutral-800 text-neutral-400"
-                  }`}
-                >
-                  {isLimitReached ? (
-                    "Limite quotidienne atteinte"
-                  ) : (
-                    <>
-                      <span className="text-violet-400 font-semibold">
-                        {usage.remaining}
-                      </span>{" "}
-                      consultation{usage.remaining > 1 ? "s" : ""} restante
-                      {usage.remaining > 1 ? "s" : ""} aujourd&apos;hui
-                    </>
-                  )}
+        <div className="space-y-12">
+          {!isLoaded ? (
+            <div className="text-[10px] uppercase tracking-[0.5em] text-foreground/50 animate-pulse">
+              Initialisation des fréquences...
+            </div>
+          ) : !isSignedIn ? (
+            <div className="space-y-8 animate-fade-in">
+              <p className="text-[10px] uppercase tracking-[0.4em] text-foreground leading-relaxed max-w-xs mx-auto">
+                Accédez à l&apos;incertitude primordiale. Trois consultations solaires par jour.
+              </p>
+              <div className="w-px h-16 bg-linear-to-b from-gold to-transparent mx-auto" />
+            </div>
+          ) : (
+            <div className="space-y-12 animate-fade-in">
+              {usage && (
+                <div className="flex justify-center">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-foreground/60 font-medium">
+                    {isLimitReached ? (
+                      <span className="text-red-600">Cycle quotidien épuisé</span>
+                    ) : (
+                      <>
+                        Fréquence : <span className="text-gold-700 font-bold">{usage.remaining}</span> consultation{usage.remaining > 1 ? "s" : ""} disponible{usage.remaining > 1 ? "s" : ""}
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            <form onSubmit={handleConsult} className="space-y-6">
-              <div className="relative">
-                <textarea
-                  value={question}
-                  onChange={(e) => setQuestion(e.target.value)}
-                  placeholder="Posez votre question à l'univers..."
-                  className="w-full h-32 px-6 py-4 bg-neutral-900 border border-neutral-800 rounded-2xl text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent resize-none disabled:opacity-50"
-                  disabled={isLoading || isLimitReached}
-                  maxLength={500}
-                />
-                <span className="absolute bottom-3 right-3 text-xs text-neutral-600">
-                  {question.length}/500
-                </span>
-              </div>
-
-              <button
-                type="submit"
-                disabled={isLoading || !question.trim() || isLimitReached}
-                className="w-full py-4 px-6 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 disabled:from-neutral-700 disabled:to-neutral-700 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all duration-300 transform hover:scale-[1.02] disabled:hover:scale-100"
-              >
-                {isLoading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    Consultation en cours...
+              <form onSubmit={handleConsult} className="space-y-12">
+                <div className="relative group">
+                  <textarea
+                    value={question}
+                    onChange={(e) => setQuestion(e.target.value)}
+                    placeholder="Posez votre question à l'univers..."
+                    className="w-full bg-transparent border-b border-foreground/30 py-4 px-0 text-center text-xl font-light text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-gold transition-colors resize-none disabled:opacity-30"
+                    disabled={isLoading || isLimitReached}
+                    maxLength={500}
+                  />
+                  <div className="absolute bottom-0 left-0 w-full h-px bg-linear-to-r from-transparent via-gold to-transparent opacity-0 group-focus-within:opacity-100 transition-all duration-1000" />
+                  <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[9px] uppercase tracking-widest text-foreground/40">
+                    {question.length}/500
                   </span>
-                ) : isLimitReached ? (
-                  "Revenez demain"
-                ) : (
-                  "Consulter l'Oracle"
-                )}
-              </button>
-            </form>
-          </div>
-        )}
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isLoading || !question.trim() || isLimitReached}
+                  className="group relative px-12 py-4 overflow-hidden disabled:opacity-20 transition-opacity"
+                >
+                  <div className="absolute inset-0 border border-foreground/40 group-hover:border-gold transition-colors" />
+                  <span className="relative text-[11px] uppercase tracking-[0.6em] font-bold text-foreground group-hover:text-gold-700 transition-colors">
+                    {isLoading ? "Vibration en cours..." : isLimitReached ? "Attendre l'aube" : "Invoquer l'Oracle"}
+                  </span>
+                  {/* Subtle hover effect */}
+                  <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gold scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-center" />
+                </button>
+              </form>
+            </div>
+          )}
+        </div>
 
         {error && (
-          <div className="bg-red-900/30 border border-red-800 rounded-xl p-4 text-red-300">
-            {error}
+          <div className="text-[11px] uppercase tracking-[0.2em] text-red-600 font-medium animate-fade-in">
+            Interférence : {error}
           </div>
         )}
 
         {result && (
-          <div className="bg-neutral-900 border border-neutral-800 rounded-2xl p-8 space-y-6 animate-fade-in">
-            <div className="space-y-2">
-              <p className="text-sm text-neutral-500">Votre question</p>
-              <p className="text-neutral-300 italic">
-                &ldquo;{result.question}&rdquo;
+          <div className="space-y-12 animate-fade-in pt-12">
+            <div className="w-px h-16 bg-linear-to-b from-transparent via-gold to-transparent mx-auto" />
+            
+            <div className="space-y-4">
+              <p className="text-[10px] uppercase tracking-[0.4em] text-foreground/50 font-medium">L&apos;Oracle a parlé</p>
+              <p className="text-2xl md:text-4xl font-light text-foreground leading-relaxed italic">
+                &ldquo;{result.response}&rdquo;
               </p>
             </div>
 
-            <div className="w-full h-px bg-gradient-to-r from-transparent via-violet-500 to-transparent" />
-
-            <div className="space-y-2">
-              <p className="text-sm text-violet-400">Réponse de l&apos;Oracle</p>
-              <p className="text-xl text-white font-medium leading-relaxed">
-                {result.response}
-              </p>
-            </div>
-
-            <div className="pt-4 border-t border-neutral-800">
-              <p className="text-xs text-neutral-600">
-                Source: ANU Quantum Random Numbers | Données:{" "}
-                {result.quantumData.numbers.slice(0, 4).join(", ")}...
-              </p>
+            <div className="space-y-8">
+              <div className="flex justify-center items-center gap-8">
+                <div className="w-8 h-px bg-gold/40" />
+                <p className="text-[9px] uppercase tracking-[0.5em] text-foreground/40 font-bold">
+                  Signature Quantique
+                </p>
+                <div className="w-8 h-px bg-gold/40" />
+              </div>
+              
+              <div className="flex flex-wrap justify-center gap-4 text-[9px] font-mono tracking-widest text-foreground/60">
+                {result.quantumData.numbers.slice(0, 6).map((n, i) => (
+                  <span key={i} className="px-2 py-1 border border-foreground/20 bg-background/50">{n}</span>
+                ))}
+              </div>
             </div>
           </div>
         )}
 
-        <p className="text-xs text-neutral-600 max-w-md mx-auto">
-          Ce service est fourni à des fins de divertissement et de réflexion
-          personnelle. Les réponses ne constituent pas des conseils
-          professionnels.
-        </p>
+        <footer className="pt-24 space-y-4">
+          <div className="w-px h-8 bg-foreground/20 mx-auto" />
+          <p className="text-[10px] uppercase tracking-[0.4em] text-foreground/50 max-w-xs mx-auto leading-loose font-medium">
+            Exploration métaphysique par résonance subatomique.
+            Divertissement et réflexion.
+          </p>
+        </footer>
       </div>
     </div>
   );

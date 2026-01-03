@@ -1,13 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
+  --background: #f2f0ea; /* Alabaster */
+  --foreground: #2d2a24; /* Dark Sandstone / Charcoal */
+  --sandstone: #d7c9b1;
+  --gold: #d4af37;
+  --gold-light: #e1c16e;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-sandstone: var(--sandstone);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -16,12 +22,13 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
 }
 
 @keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -29,39 +36,71 @@ body {
   }
 }
 
-@keyframes quantum-pulse {
-  0%,
-  100% {
-    opacity: 0.4;
-    transform: scale(1);
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
   }
   50% {
-    opacity: 1;
-    transform: scale(1.05);
+    transform: translateY(-20px) scale(1.02);
   }
 }
 
-@keyframes quantum-wave {
-  0% {
-    background-position: 0% 50%;
+@keyframes golden-glow {
+  0%, 100% {
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+    filter: brightness(1);
   }
   50% {
-    background-position: 100% 50%;
+    box-shadow: 0 0 60px rgba(212, 175, 55, 0.4);
+    filter: brightness(1.1);
   }
-  100% {
-    background-position: 0% 50%;
-  }
+}
+
+@keyframes grain {
+  0%, 100% { transform:translate(0, 0) }
+  10% { transform:translate(-5%, -10%) }
+  20% { transform:translate(-15%, 5%) }
+  30% { transform:translate(7%, -25%) }
+  40% { transform:translate(-5%, 25%) }
+  50% { transform:translate(-15%, 10%) }
+  60% { transform:translate(15%, 0%) }
+  70% { transform:translate(0%, 15%) }
+  80% { transform:translate(3%, 35%) }
+  90% { transform:translate(-10%, 10%) }
 }
 
 .animate-fade-in {
-  animation: fade-in 0.5s ease-out forwards;
+  animation: fade-in 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.animate-quantum-pulse {
-  animation: quantum-pulse 2s ease-in-out infinite;
+.animate-float {
+  animation: float 8s ease-in-out infinite;
 }
 
-.animate-quantum-wave {
-  background-size: 200% 200%;
-  animation: quantum-wave 3s ease infinite;
+.animate-golden-glow {
+  animation: golden-glow 4s ease-in-out infinite;
+}
+
+.film-grain {
+  position: fixed;
+  top: -100%;
+  left: -100%;
+  width: 300%;
+  height: 300%;
+  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 50;
+  animation: grain 8s steps(10) infinite;
+}
+
+.volumetric-rays {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 1;
 }
