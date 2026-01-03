@@ -30,7 +30,7 @@ Il utilise un **QRNG (Quantum Random Number Generator)** — un dispositif physi
 │  • Mesure des phénomènes quantiques pour générer des NOMBRES        │
 │  • Ne fait pas de calculs, juste de l'aléatoire pur                 │
 │  • Accessible via API, relativement abordable                       │
-│  • Ex: ANU QRNG, ID Quantique, Quantum Blockchains                  │
+│  • Ex: ANU QRNG, LfD Hannover, ID Quantique                         │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -196,10 +196,10 @@ Mesure quantique → Résultat
         ┌─────────────┼─────────────┐
         ▼             ▼             ▼
 ┌───────────┐  ┌───────────┐  ┌───────────┐
-│  NeonDB   │  │  ANU QRNG │  │  Quantum  │
-│ (Postgres)│  │  (Primaire)│  │Blockchains│
-│           │  │           │  │ (Fallback)│
-│ Historique│  │  Australie │  │  Pologne  │
+│  NeonDB   │  │  ANU QRNG │  │ LfD QRNG  │
+│ (Postgres)│  │  (Primaire)│  │ (Fallback)│
+│           │  │           │  │           │
+│ Historique│  │  Australie │  │ Allemagne │
 │ Utilisateurs│ │           │  │           │
 └───────────┘  └───────────┘  └───────────┘
 ```
@@ -213,7 +213,7 @@ Mesure quantique → Résultat
 | Auth | Clerk |
 | Database | NeonDB (Serverless Postgres) |
 | ORM | Drizzle |
-| QRNG | ANU (primaire) → Quantum Blockchains (fallback) |
+| QRNG | ANU (primaire) → LfD Hannover (fallback) |
 | Hosting | Vercel |
 | Package Manager | Bun |
 

@@ -1,7 +1,18 @@
 export interface QuantumResult {
   numbers: number[];
   timestamp: Date;
-  source: "anu" | "qb" | "fallback";
+  source: "anu" | "lfd" | "fallback";
+}
+
+// Helper to convert hex string to number array
+function hexToNumbers(hex: string): number[] {
+  const numbers: number[] = [];
+  // Remove any spaces or non-hex characters
+  const cleanHex = hex.replace(/[^0-9a-fA-F]/g, "");
+  for (let i = 0; i < cleanHex.length; i += 2) {
+    numbers.push(parseInt(cleanHex.substring(i, i + 2), 16));
+  }
+  return numbers;
 }
 
 // ANU QRNG API
@@ -31,28 +42,31 @@ async function fetchFromANU(length: number): Promise<QuantumResult> {
   };
 }
 
-// Quantum Blockchains API (fallback)
-async function fetchFromQuantumBlockchains(
-  length: number
-): Promise<QuantumResult> {
-  const url = `https://api.quantumblockchains.io/v1/qrng/random-numbers?count=${length}&min=0&max=255`;
+// LfD QRNG API (Leibniz Universität Hannover, Germany) - fallback
+async function fetchFromLfD(length: number): Promise<QuantumResult> {
+  const url = `https://lfdr.de/qrng_api/qrng?length=${length}&format=HEX`;
 
   const response = await fetch(url, {
     method: "GET",
-    headers: { Accept: "application/json" },
+    headers: { Accept: "text/plain" },
     cache: "no-store",
   });
 
   if (!response.ok) {
-    throw new Error(`Quantum Blockchains API error: ${response.status}`);
+    throw new Error(`LfD QRNG API error: ${response.status}`);
   }
 
-  const data = await response.json();
+  const hexData = await response.text();
+  const numbers = hexToNumbers(hexData);
+
+  if (numbers.length === 0) {
+    throw new Error("LfD QRNG returned empty data");
+  }
 
   return {
-    numbers: data.numbers || data,
+    numbers,
     timestamp: new Date(),
-    source: "qb",
+    source: "lfd",
   };
 }
 
@@ -80,17 +94,14 @@ export async function getQuantumRandomNumbers(
   try {
     return await fetchFromANU(length);
   } catch (anuError) {
-    console.warn("ANU QRNG failed, trying Quantum Blockchains:", anuError);
+    console.warn("ANU QRNG failed, trying LfD QRNG:", anuError);
   }
 
-  // Try Quantum Blockchains as fallback
+  // Try LfD QRNG (Germany) as fallback
   try {
-    return await fetchFromQuantumBlockchains(length);
-  } catch (qbError) {
-    console.warn(
-      "Quantum Blockchains failed, using crypto fallback:",
-      qbError
-    );
+    return await fetchFromLfD(length);
+  } catch (lfdError) {
+    console.warn("LfD QRNG failed, using crypto fallback:", lfdError);
   }
 
   // Last resort: crypto fallback
