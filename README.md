@@ -2,7 +2,7 @@
 
 > Connectez vos décisions à l'incertitude fondamentale de l'univers.
 
-Quantum Oracle est une application web qui génère des réponses en utilisant de **vrais nombres aléatoires quantiques** — pas des algorithmes pseudo-aléatoires classiques.
+Quantum Oracle est une application web qui génère des réponses en utilisant de **vrais nombres aléatoires quantiques** combinés à un **LLM local** — pas des algorithmes pseudo-aléatoires classiques.
 
 ---
 
@@ -12,7 +12,7 @@ Quantum Oracle est une application web qui génère des réponses en utilisant d
 
 **Non.** Quantum Oracle n'utilise pas un ordinateur quantique (comme ceux d'IBM ou Google).
 
-Il utilise un **QRNG (Quantum Random Number Generator)** — un dispositif physique qui mesure des phénomènes quantiques réels pour générer des nombres véritablement aléatoires.
+Il utilise un **QRNG (Quantum Random Number Generator)** — un dispositif physique qui mesure des phénomènes quantiques réels pour générer des nombres véritablement aléatoires. Ces nombres **guident ensuite un LLM** (Mistral-Trismegistus) pour générer des réponses uniques.
 
 ### Quelle est la différence ?
 
@@ -30,7 +30,7 @@ Il utilise un **QRNG (Quantum Random Number Generator)** — un dispositif physi
 │  • Mesure des phénomènes quantiques pour générer des NOMBRES        │
 │  • Ne fait pas de calculs, juste de l'aléatoire pur                 │
 │  • Accessible via API, relativement abordable                       │
-│  • Ex: ANU QRNG, LfD Hannover, ID Quantique                         │
+│  • Ex: LfD Hannover, NIST Beacon, ID Quantique                      │
 └─────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -39,86 +39,93 @@ Il utilise un **QRNG (Quantum Random Number Generator)** — un dispositif physi
 ## Le voyage d'une consultation
 
 ```
-┌──────────────┐     ┌─────────────────┐     ┌──────────────────┐
-│  Ta question │────▶│  Quantum Oracle │────▶│  Ta réponse      │
-│              │     │                 │     │                  │
-│ "Dois-je..." │     │   ┌─────────┐   │     │ "L'univers..."   │
-└──────────────┘     │   │  QRNG   │   │     └──────────────────┘
-                     │   │   API   │   │
-                     │   └────┬────┘   │
-                     │        │        │
-                     │   [47, 182,     │
-                     │    91, 203...]  │
-                     └────────┼────────┘
+┌──────────────┐     ┌─────────────────────────────────────┐     ┌──────────────────┐
+│  Ta question │────▶│         Quantum Oracle              │────▶│  Ta réponse      │
+│              │     │                                     │     │                  │
+│ "Dois-je..." │     │  ┌─────────┐    ┌──────────────┐   │     │ Conseil clair    │
+└──────────────┘     │  │  QRNG   │───▶│   Ollama     │   │     │ et pratique      │
+                     │  │   API   │    │   (LLM)      │   │     └──────────────────┘
+                     │  └────┬────┘    └──────────────┘   │
+                     │       │                ▲           │
+                     │  [47, 182,             │           │
+                     │   91, 203...]          │           │
+                     │       │                │           │
+                     │       └──── Contraintes quantiques │
+                     │             • Énergie (0-100%)     │
+                     │             • Température LLM      │
+                     │             • Seed de génération   │
+                     └────────────────────────────────────┘
                               │
-                     ┌────────▼────────┐
-                     │ MESURE QUANTIQUE │
-                     │ (Australie/ANU)  │
-                     │                  │
-                     │  Fluctuations    │
-                     │  du vide         │
-                     │  quantique       │
-                     └──────────────────┘
+              ┌───────────────┼───────────────┐
+              ▼               ▼               ▼
+       ┌───────────┐   ┌───────────┐   ┌───────────┐
+       │    LfD    │   │   NIST    │   │  Crypto   │
+       │ (Primaire)│   │(Secondaire)│  │ (Fallback)│
+       │ Allemagne │   │ États-Unis│   │  Local    │
+       └───────────┘   └───────────┘   └───────────┘
 ```
 
 ### Étape par étape :
 
 1. **Tu poses ta question** → L'app envoie une requête à l'API QRNG
 
-2. **Mesure quantique réelle** → En Australie, un laser mesure les fluctuations du vide quantique (phénomène physique réel)
+2. **Mesure quantique réelle** → En Allemagne (LfD Hannover), un dispositif ID Quantique mesure le bruit de grenaille quantique (shot noise)
 
-3. **Nombres générés** → Ces mesures produisent des nombres (ex: `[47, 182, 91, 203, 156, 88, 201, 127]`)
+3. **Nombres générés** → Ces mesures produisent 8 octets (ex: `[47, 182, 91, 203, 156, 88, 201, 127]`)
 
-4. **Interprétation** → Un algorithme transforme ces nombres en réponse textuelle
+4. **Contraintes dérivées** → Les nombres quantiques déterminent :
+   - **Énergie** : moyenne des octets (0-100%)
+   - **Température** : variance des octets → créativité du LLM (0.3-0.9)
+   - **Seed** : premier octet → reproductibilité
 
-5. **Ta réponse** → Tu reçois une guidance basée sur cette source d'aléatoire quantique
+5. **Génération LLM** → Mistral-Trismegistus génère une réponse guidée par ces contraintes
+
+6. **Ta réponse** → Tu reçois un conseil clair et pratique, unique à cet instant quantique
 
 ---
 
-## La science derrière le QRNG
+## La chaîne de fournisseurs QRNG
 
-### Qu'est-ce que les "fluctuations du vide quantique" ?
-
-Même le vide absolu n'est pas vraiment vide. Selon la mécanique quantique, des particules virtuelles apparaissent et disparaissent constamment — c'est le **principe d'incertitude de Heisenberg**.
+Le système implémente une chaîne de fournisseurs avec fallback automatique :
 
 ```
-    Le "vide" quantique
-
-    ─────────────────────────────────
-         ∿    ∿         ∿
-      ∿     ∿    ∿   ∿     ∿
-    ∿    ∿     ∿        ∿      ∿
-         ∿        ∿   ∿     ∿
-    ─────────────────────────────────
-
-    Ces fluctuations sont FONDAMENTALEMENT
-    imprévisibles — pas juste "difficiles
-    à prévoir", mais IMPOSSIBLES à prévoir
-    selon les lois de la physique.
-```
-
-### Comment l'ANU mesure ces fluctuations ?
-
-L'Australian National University utilise un **laser** qui traverse un cristal optique. Les photons du laser subissent des fluctuations quantiques, et un détecteur mesure ces variations pour générer des nombres.
-
-```
-    ┌───────┐     ┌─────────┐     ┌──────────┐     ┌────────┐
-    │ Laser │────▶│ Cristal │────▶│ Détecteur│────▶│ Nombre │
-    └───────┘     └─────────┘     └──────────┘     └────────┘
-                       │
-                       ▼
-                  Fluctuations
-                  quantiques
-                  (aléatoire pur)
+┌─────────────────────────────────────────────────────────────────────┐
+│  1. LfD QRNG (Leibniz Universität Hannover) ← PRIMAIRE              │
+│     • Matériel ID Quantique mesurant le bruit de grenaille          │
+│     • Endpoint: lfdr.de/qrng_api/qrng                               │
+│     • Timeout: 8s, 2 tentatives avec backoff exponentiel            │
+└─────────────────────────────────────────────────────────────────────┘
+                              │ si échec
+                              ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  2. NIST Beacon 2.0 ← SECONDAIRE                                    │
+│     • Valeurs aléatoires signées cryptographiquement (512 bits)     │
+│     • Mises à jour toutes les 60 secondes                           │
+│     • Endpoint: beacon.nist.gov/beacon/2.0/pulse/last               │
+└─────────────────────────────────────────────────────────────────────┘
+                              │ si échec
+                              ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│  3. Web Crypto API ← FALLBACK                                       │
+│     • crypto.getRandomValues() du navigateur/runtime                │
+│     • Cryptographiquement sûr mais PAS quantique                    │
+│     • Utilisé uniquement si tous les fournisseurs échouent          │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## Partie algorithmique (ce que NOUS faisons)
+## L'intégration LLM (Ollama)
 
-### Comment les nombres deviennent une réponse ?
+### Le modèle : Mistral-Trismegistus
 
-Les nombres quantiques sont **vraiment** aléatoires. Mais leur interprétation est **algorithmique** :
+```
+Modèle: arthurjean/mistral-trismegistus:7b-q6_K
+Spécialisation: Contenu ésotérique et spirituel
+Hébergement: Ollama (serveur local)
+```
+
+### Comment les nombres quantiques guident le LLM
 
 ```
 Nombres reçus: [47, 182, 91, 203, 156, 88, 201, 127]
@@ -126,30 +133,52 @@ Nombres reçus: [47, 182, 91, 203, 156, 88, 201, 127]
 1. Calcul de l'énergie
    ───────────────────
    Moyenne = (47+182+91+203+156+88+201+127) / 8 = 136.875
-   Normalisée = 136.875 / 255 = 0.537 (échelle 0-1)
+   Normalisée = 136.875 / 255 = 0.537 (53.7%)
 
-2. Classification
-   ───────────────
-   0.00 - 0.20 : Énergie basse    → Patience, introspection
-   0.20 - 0.40 : Énergie prudente → Obstacles, préparation
-   0.40 - 0.60 : Énergie neutre   → Équilibre, libre arbitre  ← 0.537 ici
-   0.60 - 0.80 : Énergie positive → Avancer, opportunités
-   0.80 - 1.00 : Énergie forte    → Feu vert, alignement
+2. Calcul de la variance → Température LLM
+   ────────────────────────────────────────
+   Variance des octets normalisés
+   Température = 0.3 + (variance × 2.4)
+   Plage: 0.3 (conservateur) à 0.9 (créatif)
 
-3. Sélection de la réponse
-   ───────────────────────
-   Index = premier nombre % 3 = 47 % 3 = 2
-   → Sélectionne la 3ème réponse de la catégorie "neutre"
+3. Seed de génération
+   ───────────────────
+   Seed = premier octet = 47
+   Assure la reproductibilité de la génération
+
+4. Catégorie d'énergie
+   ────────────────────
+   0.00 - 0.20 : Très basse → "calme et réflexif"
+   0.20 - 0.40 : Basse      → "mesuré et prudent"
+   0.40 - 0.60 : Neutre     → "équilibré et objectif"  ← 0.537 ici
+   0.60 - 0.80 : Haute      → "positif et encourageant"
+   0.80 - 1.00 : Très haute → "confiant et direct"
 ```
 
-### Ce qui est quantique vs algorithmique
+### Prompt système
+
+Le LLM reçoit un prompt strict pour des réponses concises :
+
+```
+Style: Clair, direct, utile. Donner une perspective actionnable.
+Format: 1-2 phrases maximum, 30 mots max.
+Jamais: vague, métaphores, poèmes, ou dépasser 2 phrases.
+```
+
+### Fallback si Ollama indisponible
+
+Si le LLM n'est pas accessible, le système utilise des réponses pré-écrites sélectionnées selon la catégorie d'énergie quantique.
+
+---
+
+## Ce qui est quantique vs algorithmique vs IA
 
 | Aspect | Source |
 |--------|--------|
-| Les nombres bruts (47, 182, 91...) | **Quantique** — Mesure physique réelle |
-| L'interprétation en "énergie" | **Algorithmique** — Code que nous avons écrit |
-| Les textes de réponse | **Humain** — Rédigés par nous |
-| Le hasard de la sélection | **Quantique** — Basé sur les nombres reçus |
+| Les 8 octets bruts (47, 182, 91...) | **Quantique** — Mesure physique réelle |
+| L'énergie, variance, température | **Algorithmique** — Formules déterministes |
+| Le texte de la réponse | **IA (LLM)** — Généré par Mistral-Trismegistus |
+| Le "caractère" de la réponse | **Hybride** — LLM contraint par paramètres quantiques |
 
 ---
 
@@ -181,57 +210,64 @@ Mesure quantique → Résultat
 ## Architecture technique
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                      FRONTEND                                │
-│  Next.js 16 + React 19 + Tailwind CSS                       │
-│  PWA (Progressive Web App)                                   │
-└─────────────────────┬───────────────────────────────────────┘
-                      │
-┌─────────────────────▼───────────────────────────────────────┐
-│                    BACKEND                                   │
-│  Next.js API Routes (Edge Functions sur Vercel)             │
-│  Clerk (Authentification)                                    │
-└─────────────────────┬───────────────────────────────────────┘
-                      │
-        ┌─────────────┼─────────────┐
-        ▼             ▼             ▼
-┌───────────┐  ┌───────────┐  ┌───────────┐
-│  NeonDB   │  │  ANU QRNG │  │ LfD QRNG  │
-│ (Postgres)│  │  (Primaire)│  │ (Fallback)│
-│           │  │           │  │           │
-│ Historique│  │  Australie │  │ Allemagne │
-│ Utilisateurs│ │           │  │           │
-└───────────┘  └───────────┘  └───────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                         FRONTEND                                     │
+│  Next.js 16 + React 19 + Tailwind CSS 4                             │
+└─────────────────────────┬───────────────────────────────────────────┘
+                          │
+┌─────────────────────────▼───────────────────────────────────────────┐
+│                         BACKEND                                      │
+│  Next.js API Routes                                                  │
+│  Clerk (Authentification)                                            │
+└─────────────────────────┬───────────────────────────────────────────┘
+                          │
+     ┌────────────────────┼────────────────────┐
+     ▼                    ▼                    ▼
+┌──────────┐       ┌───────────┐        ┌───────────┐
+│  NeonDB  │       │   QRNG    │        │  Ollama   │
+│(Postgres)│       │  Chain    │        │  (LLM)    │
+│          │       │           │        │           │
+│Historique│       │LfD → NIST │        │ Mistral-  │
+│Utilisateurs│     │→ Crypto   │        │Trismegistus│
+└──────────┘       └───────────┘        └───────────┘
 ```
 
 ### Stack technique
 
 | Composant | Technologie |
 |-----------|-------------|
-| Framework | Next.js 16 (App Router) |
+| Framework | Next.js 16 (App Router, Turbopack) |
 | UI | React 19 + Tailwind CSS 4 |
 | Auth | Clerk |
 | Database | NeonDB (Serverless Postgres) |
 | ORM | Drizzle |
-| QRNG | ANU (primaire) → LfD Hannover (fallback) |
+| QRNG | LfD (primaire) → NIST (secondaire) → Web Crypto (fallback) |
+| LLM | Ollama + Mistral-Trismegistus-7B |
 | Hosting | Vercel |
 | Package Manager | Bun |
+
+### Endpoints API
+
+| Endpoint | Méthode | Auth | Description |
+|----------|---------|------|-------------|
+| `/api/consult` | POST | Requis | Soumettre une question, recevoir une réponse |
+| `/api/history` | GET | Requis | Récupérer l'historique des consultations |
+| `/api/ollama/health` | GET | Public | Vérifier la disponibilité d'Ollama |
 
 ---
 
 ## Ce que Quantum Oracle N'EST PAS
 
-- ❌ Un oracle divinatoire avec des pouvoirs surnaturels
-- ❌ Un ordinateur quantique qui "calcule" ta destinée
-- ❌ Une IA qui analyse ta question
-- ❌ Une prédiction de l'avenir
+- Un oracle divinatoire avec des pouvoirs surnaturels
+- Un ordinateur quantique qui "calcule" ta destinée
+- Une prédiction de l'avenir
 
 ## Ce que Quantum Oracle EST
 
-- ✅ Une source d'aléatoire véritablement quantique
-- ✅ Un outil de réflexion et d'introspection
-- ✅ Une expérience qui connecte technologie et contemplation
-- ✅ Un miroir qui te renvoie à toi-même
+- Une source d'aléatoire véritablement quantique
+- Un LLM guidé par des contraintes dérivées de mesures quantiques
+- Un outil de réflexion et d'introspection
+- Une expérience qui connecte technologie et contemplation
 
 ---
 
@@ -239,7 +275,7 @@ Mesure quantique → Résultat
 
 > "L'univers quantique ne prédit pas ton avenir. Il te rappelle que le futur n'est pas écrit — que chaque moment contient une infinité de possibilités. La réponse que tu reçois n'est pas LA vérité, mais UN point de départ pour ta propre réflexion."
 
-Les nombres sont quantiques. L'interprétation est humaine. La signification, tu la crées.
+Les nombres sont quantiques. La génération est IA. La signification, tu la crées.
 
 ---
 
@@ -253,12 +289,19 @@ bun install
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=...
 CLERK_SECRET_KEY=...
 DATABASE_URL=...
+OLLAMA_URL=http://localhost:11434  # Optionnel, localhost par défaut
+
+# Setup Ollama (LLM local)
+bun run ollama:setup
+# Ou manuellement:
+ollama pull arthurjean/mistral-trismegistus:7b-q6_K
+ollama serve
 
 # Lancer
 bun dev
 
 # Scripts disponibles
-bun run dev        # Serveur de développement
+bun run dev        # Serveur de développement (Turbopack)
 bun run build      # Build production
 bun run lint       # ESLint
 bun run typecheck  # TypeScript
@@ -275,4 +318,4 @@ MIT
 
 ---
 
-*Les nombres sont quantiques. Les mots sont humains. La signification est tienne.*
+*Les nombres sont quantiques. Les mots sont générés. La signification est tienne.*
