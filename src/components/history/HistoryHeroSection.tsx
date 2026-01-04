@@ -5,7 +5,7 @@ export const HistoryHeroSection = () => {
     <div className="relative py-12 overflow-hidden">
       <div className="absolute inset-0 bg-linear-to-b from-violet-900/20 to-transparent pointer-events-none" />
       <div className="max-w-4xl mx-auto px-4 relative z-10 text-center space-y-4">
-        <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight bg-clip-text text-transparent bg-linear-to-r from-white via-violet-200 to-white/70">
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight bg-clip-text text-transparent bg-linear-to-r from-white via-violet-200 to-white/70">
           Chroniques Quantiques
         </h1>
         <p className="text-neutral-400 text-lg max-w-2xl mx-auto italic">
