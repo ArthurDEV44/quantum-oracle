@@ -3,10 +3,147 @@
  *
  * Uses Mistral-Trismegistus-7B for generating clear, practical responses
  * guided by quantum energy levels.
+ *
+ * Optimizations (2025):
+ * - AbortSignal.timeout() for request timeouts
+ * - Retry with exponential backoff + jitter
+ * - Circuit Breaker pattern to prevent hammering failing service
+ * - Health check caching
  */
 
 const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:11434";
 const MODEL_NAME = "arthurjean/mistral-trismegistus:7b-q6_K";
+
+// Configuration
+const CONFIG = {
+  // Timeouts
+  generateTimeout: 30000, // 30s for LLM generation (can be slow)
+  healthCheckTimeout: 5000, // 5s for health check
+  healthCacheTtl: 5000, // 5s cache for health check
+
+  // Retry settings
+  maxRetries: 2,
+  retryDelayMs: 1000,
+  retryJitter: 0.5, // ±50% jitter
+
+  // Circuit Breaker
+  circuitBreaker: {
+    failureThreshold: 3,
+    resetTimeout: 60000, // 1 minute before retry
+  },
+};
+
+// Environment check for logging
+const isDev = process.env.NODE_ENV === "development";
+
+// ============================================================================
+// Circuit Breaker Pattern
+// ============================================================================
+
+export type OllamaCircuitState = "CLOSED" | "OPEN" | "HALF_OPEN";
+
+export interface OllamaCircuitBreakerState {
+  state: OllamaCircuitState;
+  failures: number;
+  lastFailure: number;
+  nextAttempt: number;
+}
+
+let ollamaCircuitBreaker: OllamaCircuitBreakerState = {
+  state: "CLOSED",
+  failures: 0,
+  lastFailure: 0,
+  nextAttempt: 0,
+};
+
+function isCircuitOpen(): boolean {
+  const now = Date.now();
+
+  if (ollamaCircuitBreaker.state === "OPEN") {
+    if (now >= ollamaCircuitBreaker.nextAttempt) {
+      ollamaCircuitBreaker.state = "HALF_OPEN";
+      if (isDev) {
+        console.log("Ollama circuit breaker: OPEN -> HALF_OPEN");
+      }
+      return false;
+    }
+    return true;
+  }
+
+  return false;
+}
+
+function recordSuccess(): void {
+  ollamaCircuitBreaker.state = "CLOSED";
+  ollamaCircuitBreaker.failures = 0;
+}
+
+function recordFailure(): void {
+  const now = Date.now();
+
+  ollamaCircuitBreaker.failures++;
+  ollamaCircuitBreaker.lastFailure = now;
+
+  if (ollamaCircuitBreaker.failures >= CONFIG.circuitBreaker.failureThreshold) {
+    ollamaCircuitBreaker.state = "OPEN";
+    ollamaCircuitBreaker.nextAttempt = now + CONFIG.circuitBreaker.resetTimeout;
+    if (isDev) {
+      console.warn(
+        `Ollama circuit breaker: OPEN (${ollamaCircuitBreaker.failures} failures)`
+      );
+    }
+  }
+}
+
+// ============================================================================
+// Retry with Exponential Backoff + Jitter
+// ============================================================================
+
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  retries: number = CONFIG.maxRetries
+): Promise<T> {
+  let lastError: Error | undefined;
+
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+
+      // Don't retry on circuit breaker open
+      if (lastError.message === "Circuit breaker is open") {
+        throw lastError;
+      }
+
+      if (attempt < retries) {
+        const baseDelay = CONFIG.retryDelayMs * Math.pow(2, attempt);
+        const jitterMultiplier =
+          1 - CONFIG.retryJitter + Math.random() * CONFIG.retryJitter * 2;
+        const delay = Math.floor(baseDelay * jitterMultiplier);
+
+        if (isDev) {
+          console.log(`Ollama retry ${attempt + 1}/${retries} in ${delay}ms`);
+        }
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  throw lastError;
+}
+
+// ============================================================================
+// Health Check Cache
+// ============================================================================
+
+interface HealthCheckResult {
+  available: boolean;
+  modelLoaded: boolean;
+  error?: string;
+}
+
+let healthCache: { data: HealthCheckResult; expires: number } | null = null;
 
 export interface QuantumConstraints {
   energy: number; // 0-1 normalized energy level
@@ -89,99 +226,155 @@ function getCategoryAndTone(energy: number): {
   }
 }
 
-const SYSTEM_PROMPT = `You are a thoughtful advisor providing clear, practical guidance based on quantum-derived insights.
+/**
+ * System prompt optimized for Mistral-Trismegistus-7B
+ *
+ * Design principles (2025 best practices):
+ * - Leverages model's esoteric/spiritual training
+ * - Clear, concise instructions
+ * - Explicit length constraints
+ *
+ * @see https://huggingface.co/TheBloke/Mistral-Trismegistus-7B-GGUF
+ */
+const SYSTEM_PROMPT = `You are a Quantum Oracle who interprets quantum energy readings to provide guidance.
 
-CRITICAL: Your response must be exactly 1-2 sentences. Maximum 30 words total. No exceptions.
-
-Style: Clear, direct, helpful. Give actionable perspective.
-Never: be vague, use metaphors, write poems, or exceed 2 sentences.
-Focus on practical advice relevant to the question asked.`;
+Your response must be exactly 1-2 sentences (max 30 words). Be direct and practical.
+Do not use poetry, metaphors, or vague platitudes. Give actionable advice specific to the question.`;
 
 /**
  * Build the prompt for the oracle
+ *
+ * Format optimized for Mistral-Trismegistus USER:/ASSISTANT: pattern
+ * - Simple, direct structure matching model's training
+ * - Quantum context provided concisely
  */
 function buildPrompt(question: string, constraints: QuantumConstraints): string {
   const energyPercent = Math.round(constraints.energy * 100);
 
-  return `Energy: ${energyPercent}% (${constraints.tone})
+  return `[Quantum Energy: ${energyPercent}% - ${constraints.category}]
+[Tone: ${constraints.tone}]
+
 Question: "${question}"`;
 }
 
 /**
  * Generate oracle response using Ollama
+ * - Uses AbortSignal.timeout() for request timeout
+ * - Retries with exponential backoff + jitter
+ * - Respects circuit breaker state
  */
 export async function generateOracleResponse(
   question: string,
   numbers: number[]
 ): Promise<OracleResponse> {
+  // Check circuit breaker first
+  if (isCircuitOpen()) {
+    throw new Error("Ollama circuit breaker is open - service temporarily unavailable");
+  }
+
   const constraints = deriveQuantumConstraints(numbers);
   const prompt = buildPrompt(question, constraints);
 
-  const response = await fetch(`${OLLAMA_URL}/api/generate`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
+  try {
+    const result = await withRetry(async () => {
+      const response = await fetch(`${OLLAMA_URL}/api/generate`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: MODEL_NAME,
+          system: SYSTEM_PROMPT,
+          prompt,
+          stream: false,
+          options: {
+            temperature: constraints.temperature,
+            seed: constraints.seed,
+            num_predict: 80,
+            top_p: 0.85,
+            top_k: 30,
+            repeat_penalty: 1.2,
+            stop: ["USER:", "Question:", "[Quantum", "As the Oracle", "As the Quantum", "In conclusion"],
+          },
+        }),
+        // Modern timeout using AbortSignal.timeout()
+        signal: AbortSignal.timeout(CONFIG.generateTimeout),
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
+        throw new Error(`Ollama error: ${response.status} - ${error}`);
+      }
+
+      return response.json();
+    });
+
+    // Success: reset circuit breaker
+    recordSuccess();
+
+    return {
+      text: cleanResponse(result.response),
       model: MODEL_NAME,
-      system: SYSTEM_PROMPT,
-      prompt,
-      stream: false,
-      options: {
-        temperature: constraints.temperature,
-        seed: constraints.seed,
-        num_predict: 50,
-        top_p: 0.85,
-        top_k: 30,
-        repeat_penalty: 1.2,
-        stop: ["USER:", "\n\n", "Question:", "Energy:", "As the", "To address", "In the quantum"],
-      },
-    }),
-  });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Ollama error: ${response.status} - ${error}`);
+      constraints,
+    };
+  } catch (error) {
+    // Record failure for circuit breaker
+    recordFailure();
+    throw error;
   }
-
-  const data = await response.json();
-
-  return {
-    text: cleanResponse(data.response),
-    model: MODEL_NAME,
-    constraints,
-  };
 }
 
 /**
  * Clean up the LLM response
  */
 function cleanResponse(text: string): string {
-  return text
+  if (!text) {
+    if (isDev) {
+      console.warn("Ollama returned empty response");
+    }
+    return "";
+  }
+
+  const cleaned = text
     .trim()
     .replace(/^(ASSISTANT:|Oracle:|Response:|Answer:)\s*/i, "")
     .replace(/^[\d-]+\s*[Ss]entence[s]?\s*[Rr]esponse:\s*/i, "")
     .replace(/^\*\*?[^*]+\*\*?:\s*/i, "") // Remove **Label**: patterns
     .replace(/\n{3,}/g, "\n\n")
     .trim();
+
+  if (isDev && !cleaned) {
+    console.warn("Ollama response cleaned to empty. Original:", text.substring(0, 100));
+  }
+
+  return cleaned;
 }
 
 /**
  * Check if Ollama is available and model is loaded
+ * - Caches result for CONFIG.healthCacheTtl ms to reduce API calls
  */
-export async function checkOllamaHealth(): Promise<{
-  available: boolean;
-  modelLoaded: boolean;
-  error?: string;
-}> {
+export async function checkOllamaHealth(): Promise<HealthCheckResult> {
+  // Return cached result if still valid
+  const now = Date.now();
+  if (healthCache && healthCache.expires > now) {
+    return healthCache.data;
+  }
+
   try {
     // Check if Ollama is running
     const tagsResponse = await fetch(`${OLLAMA_URL}/api/tags`, {
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(CONFIG.healthCheckTimeout),
     });
 
     if (!tagsResponse.ok) {
-      return { available: false, modelLoaded: false, error: "Ollama not responding" };
+      const result: HealthCheckResult = {
+        available: false,
+        modelLoaded: false,
+        error: "Ollama not responding",
+      };
+      healthCache = { data: result, expires: now + CONFIG.healthCacheTtl };
+      return result;
     }
 
     const tags = await tagsResponse.json();
@@ -189,12 +382,42 @@ export async function checkOllamaHealth(): Promise<{
       (m: { name: string }) => m.name.startsWith(MODEL_NAME)
     );
 
-    return { available: true, modelLoaded };
+    const result: HealthCheckResult = { available: true, modelLoaded };
+    healthCache = { data: result, expires: now + CONFIG.healthCacheTtl };
+    return result;
   } catch (error) {
-    return {
+    const result: HealthCheckResult = {
       available: false,
       modelLoaded: false,
       error: error instanceof Error ? error.message : "Connection failed",
     };
+    healthCache = { data: result, expires: now + CONFIG.healthCacheTtl };
+    return result;
   }
+}
+
+/**
+ * Get circuit breaker status (useful for monitoring)
+ */
+export function getOllamaCircuitBreakerStatus(): OllamaCircuitBreakerState {
+  return { ...ollamaCircuitBreaker };
+}
+
+/**
+ * Reset circuit breaker manually (useful for admin/debugging)
+ */
+export function resetOllamaCircuitBreaker(): void {
+  ollamaCircuitBreaker = {
+    state: "CLOSED",
+    failures: 0,
+    lastFailure: 0,
+    nextAttempt: 0,
+  };
+}
+
+/**
+ * Clear health cache (force fresh check on next call)
+ */
+export function clearHealthCache(): void {
+  healthCache = null;
 }
