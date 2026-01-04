@@ -1,63 +1,98 @@
 export interface QuantumResult {
   numbers: number[];
   timestamp: Date;
-  source: "anu" | "lfd" | "fallback";
+  source: "lfd" | "nist" | "fallback";
 }
 
+interface QRNGProvider {
+  name: string;
+  fetch: (length: number, signal: AbortSignal) => Promise<QuantumResult>;
+}
+
+// Configuration
+const CONFIG = {
+  timeout: 8000, // 8 seconds timeout per request
+  maxRetries: 2,
+  retryDelayMs: 500,
+};
+
 // Helper to convert hex string to number array
-function hexToNumbers(hex: string): number[] {
+function hexToNumbers(hex: string, maxLength?: number): number[] {
   const numbers: number[] = [];
-  // Remove any spaces or non-hex characters
   const cleanHex = hex.replace(/[^0-9a-fA-F]/g, "");
-  for (let i = 0; i < cleanHex.length; i += 2) {
+  const limit = maxLength ? Math.min(cleanHex.length, maxLength * 2) : cleanHex.length;
+
+  for (let i = 0; i < limit; i += 2) {
     numbers.push(parseInt(cleanHex.substring(i, i + 2), 16));
   }
   return numbers;
 }
 
-// ANU QRNG API
-async function fetchFromANU(length: number): Promise<QuantumResult> {
-  const url = `https://qrng.anu.edu.au/API/jsonI.php?length=${length}&type=uint8`;
+// Retry wrapper with exponential backoff
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  retries: number = CONFIG.maxRetries
+): Promise<T> {
+  let lastError: Error | undefined;
 
-  const response = await fetch(url, {
-    method: "GET",
-    headers: { Accept: "application/json" },
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    throw new Error(`ANU API error: ${response.status}`);
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      if (attempt < retries) {
+        const delay = CONFIG.retryDelayMs * Math.pow(2, attempt);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
   }
+
+  throw lastError;
+}
+
+// Fetch with timeout using AbortController
+async function fetchWithTimeout(
+  url: string,
+  options: RequestInit,
+  signal: AbortSignal
+): Promise<Response> {
+  const response = await fetch(url, { ...options, signal });
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+  }
+  return response;
+}
+
+// ============================================================================
+// QRNG Providers
+// ============================================================================
+
+/**
+ * LfD QRNG API (Leibniz Universität Hannover, Germany)
+ * Uses ID Quantique QRNG PCIe hardware
+ * Docs: https://lfdr.de/QRNG/
+ */
+async function fetchFromLfD(length: number, signal: AbortSignal): Promise<QuantumResult> {
+  const url = `https://lfdr.de/qrng_api/qrng?length=${length}&format=HEX`;
+
+  const response = await fetchWithTimeout(
+    url,
+    {
+      method: "GET",
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+    },
+    signal
+  );
 
   const data = await response.json();
 
-  if (!data.success) {
-    throw new Error("ANU API returned unsuccessful response");
+  // API returns { qrn: string, length: number }
+  if (!data.qrn || typeof data.qrn !== "string") {
+    throw new Error("LfD QRNG returned invalid response format");
   }
 
-  return {
-    numbers: data.data,
-    timestamp: new Date(),
-    source: "anu",
-  };
-}
-
-// LfD QRNG API (Leibniz Universität Hannover, Germany) - fallback
-async function fetchFromLfD(length: number): Promise<QuantumResult> {
-  const url = `https://lfdr.de/qrng_api/qrng?length=${length}&format=HEX`;
-
-  const response = await fetch(url, {
-    method: "GET",
-    headers: { Accept: "text/plain" },
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    throw new Error(`LfD QRNG API error: ${response.status}`);
-  }
-
-  const hexData = await response.text();
-  const numbers = hexToNumbers(hexData);
+  const numbers = hexToNumbers(data.qrn);
 
   if (numbers.length === 0) {
     throw new Error("LfD QRNG returned empty data");
@@ -70,41 +105,105 @@ async function fetchFromLfD(length: number): Promise<QuantumResult> {
   };
 }
 
-// Crypto fallback (uses system entropy, not truly quantum but cryptographically secure)
-function generateCryptoFallback(length: number): QuantumResult {
-  const numbers: number[] = [];
-  const array = new Uint8Array(length);
-  crypto.getRandomValues(array);
+/**
+ * NIST Randomness Beacon 2.0
+ * Provides cryptographically signed random values every 60 seconds
+ * Docs: https://csrc.nist.gov/projects/interoperable-randomness-beacons
+ */
+async function fetchFromNIST(length: number, signal: AbortSignal): Promise<QuantumResult> {
+  const url = "https://beacon.nist.gov/beacon/2.0/pulse/last";
 
-  for (let i = 0; i < length; i++) {
-    numbers.push(array[i]);
+  const response = await fetchWithTimeout(
+    url,
+    {
+      method: "GET",
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+    },
+    signal
+  );
+
+  const data = await response.json();
+
+  if (!data.pulse?.outputValue) {
+    throw new Error("NIST Beacon returned invalid response");
+  }
+
+  // outputValue is a 512-bit (128 hex chars) random value
+  const numbers = hexToNumbers(data.pulse.outputValue, length);
+
+  if (numbers.length < length) {
+    // If we need more bytes than one pulse provides (64 bytes max),
+    // we can use localRandomValue as additional entropy
+    const additionalNumbers = hexToNumbers(
+      data.pulse.localRandomValue || "",
+      length - numbers.length
+    );
+    numbers.push(...additionalNumbers);
+  }
+
+  if (numbers.length === 0) {
+    throw new Error("NIST Beacon returned insufficient data");
   }
 
   return {
-    numbers,
+    numbers: numbers.slice(0, length),
+    timestamp: new Date(),
+    source: "nist",
+  };
+}
+
+/**
+ * Crypto fallback (uses system entropy via Web Crypto API)
+ * Not quantum-based but cryptographically secure
+ */
+function generateCryptoFallback(length: number): QuantumResult {
+  const array = new Uint8Array(length);
+  crypto.getRandomValues(array);
+
+  return {
+    numbers: Array.from(array),
     timestamp: new Date(),
     source: "fallback",
   };
 }
 
+// ============================================================================
+// Provider chain
+// ============================================================================
+
+const providers: QRNGProvider[] = [
+  { name: "LfD", fetch: fetchFromLfD },
+  { name: "NIST", fetch: fetchFromNIST },
+];
+
 export async function getQuantumRandomNumbers(
   length: number = 1
 ): Promise<QuantumResult> {
-  // Try ANU first
-  try {
-    return await fetchFromANU(length);
-  } catch (anuError) {
-    console.warn("ANU QRNG failed, trying LfD QRNG:", anuError);
-  }
+  const errors: string[] = [];
 
-  // Try LfD QRNG (Germany) as fallback
-  try {
-    return await fetchFromLfD(length);
-  } catch (lfdError) {
-    console.warn("LfD QRNG failed, using crypto fallback:", lfdError);
+  for (const provider of providers) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), CONFIG.timeout);
+
+      try {
+        const result = await withRetry(() =>
+          provider.fetch(length, controller.signal)
+        );
+        return result;
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      errors.push(`${provider.name}: ${message}`);
+      console.warn(`${provider.name} QRNG failed:`, message);
+    }
   }
 
   // Last resort: crypto fallback
+  console.warn("All QRNG providers failed, using crypto fallback. Errors:", errors);
   return generateCryptoFallback(length);
 }
 
@@ -119,47 +218,49 @@ export async function getQuantumChoice<T>(options: T[]): Promise<T> {
   return options[index];
 }
 
+/**
+ * Legacy function - kept for fallback when Ollama is unavailable
+ * @deprecated Use generateOracleResponse from ollama.ts instead
+ */
 export function interpretQuantumResponse(numbers: number[]): string {
   const sum = numbers.reduce((a, b) => a + b, 0);
   const average = sum / numbers.length;
   const normalized = average / 255;
 
-  const responses = getResponsesByEnergy(normalized);
+  const responses = getFallbackResponses(normalized);
   const index = numbers[0] % responses.length;
 
   return responses[index];
 }
 
-function getResponsesByEnergy(energy: number): string[] {
+/**
+ * Fallback responses when Ollama is unavailable
+ */
+function getFallbackResponses(energy: number): string[] {
   if (energy < 0.2) {
     return [
-      "Les fluctuations quantiques révèlent un moment de gestation cosmique. Comme la graine enfouie dans la terre, votre intention a besoin de silence et d'obscurité pour germer. Cultivez la patience — ce qui semble être de l'immobilité est en réalité une transformation profonde. Méditez sur l'élément Terre.",
-      "L'univers vous invite à un voyage intérieur. Les particules ont choisi le repli, non par refus, mais par sagesse. C'est dans le vide apparent que naissent les étoiles. Prenez ce temps pour clarifier vos véritables désirs avant d'agir.",
-      "Le champ quantique murmure : « Pas encore. » Ce n'est pas un non, c'est une invitation à approfondir votre question. Qu'est-ce qui, au fond de vous, demande encore à être compris ? La réponse viendra quand vous serez prêt à l'entendre.",
+      "This is a good time to pause and reflect. Take a step back to gather more information before making decisions.",
+      "Consider slowing down and evaluating your options carefully. Patience often leads to better outcomes.",
     ];
   } else if (energy < 0.4) {
     return [
-      "Les qubits dessinent un chemin sinueux mais praticable. Des défis se profilent — non pas comme des murs, mais comme des portails de transformation. Chaque obstacle cache un enseignement. Demandez-vous : que dois-je apprendre ici avant d'avancer ?",
-      "L'énergie quantique suggère la prudence du sage, non la peur du timide. Comme l'eau qui contourne la montagne, cherchez le passage plutôt que la confrontation. Votre intuition connaît déjà le chemin — faites-lui confiance.",
-      "Le cosmos vous offre un miroir. Ce que vous percevez comme résistance extérieure reflète peut-être une hésitation intérieure. Prenez le temps d'harmoniser votre intention avec votre action. L'alignement précède la manifestation.",
+      "Proceed with care and preparation. Make sure you have what you need before taking the next step.",
+      "A thoughtful approach is recommended. Trust your instincts but verify your assumptions.",
     ];
   } else if (energy < 0.6) {
     return [
-      "Vous vous tenez au carrefour quantique, là où toutes les possibilités coexistent. L'univers ne choisit pas pour vous — il vous honore de votre libre arbitre. Écoutez le murmure de votre cœur : il connaît déjà la direction. Faites confiance à votre première intuition.",
-      "L'équilibre parfait des probabilités quantiques reflète votre moment présent. Ni oui ni non, mais « et si ? ». C'est l'invitation à explorer, à expérimenter, à danser avec l'incertitude. La magie réside dans le voyage, pas seulement dans la destination.",
-      "Les nombres quantiques révèlent une dualité créatrice. Comme le yin et le yang, deux chemins s'offrent à vous, chacun porteur de ses propres dons. Il n'y a pas de mauvais choix — seulement des expériences différentes. Qu'est-ce qui fait vibrer votre âme ?",
+      "You have multiple valid options ahead. Weigh the pros and cons, then choose what feels right.",
+      "The situation is balanced. This is a neutral moment where your choice will shape the outcome.",
     ];
   } else if (energy < 0.8) {
     return [
-      "Le vent cosmique souffle dans votre direction. Les particules s'alignent en votre faveur, créant un courant porteur. C'est le moment d'avancer avec confiance — pas avec précipitation, mais avec la grâce assurée de celui qui sait que l'univers conspire en sa faveur.",
-      "L'énergie quantique pulse d'un éclat favorable. Vos intentions trouvent écho dans le tissu même de la réalité. Restez attentif aux synchronicités qui se multiplient autour de vous — elles sont les breadcrumbs de l'univers sur votre chemin.",
-      "Les fluctuations du vide quantique portent votre intention comme une vague porte le surfeur. Le momentum est avec vous. Agissez depuis un lieu de confiance intérieure, et observez comment les portes s'ouvrent naturellement sur votre passage.",
+      "Conditions look favorable for moving forward. Take confident action toward your goals.",
+      "This is a good time to act. Trust your preparation and take the next step.",
     ];
   } else {
     return [
-      "Alignement cosmique remarquable ! Les qubits ont dansé dans une harmonie rare, signalant une fenêtre de manifestation puissante. L'univers dit OUI avec toute la force de ses étoiles. C'est le moment d'oser, de créer, de vous élancer. La magie est avec vous.",
-      "L'effondrement quantique révèle une convergence extraordinaire d'énergies favorables. Vous êtes en résonance profonde avec le flux universel. Tout ce que vous initiez maintenant porte la bénédiction du cosmos. Faites confiance à cette synchronicité parfaite.",
-      "Les nombres quantiques chantent en votre faveur ! Cette lecture est un feu vert cosmique. L'énergie de création est à son apogée autour de vous. Saisissez cet instant — il porte la promesse de l'accomplissement. L'univers vous soutient pleinement.",
+      "Strong indicators point toward success. Move forward with confidence and commitment.",
+      "Everything aligns well for your intentions. This is an excellent moment to take decisive action.",
     ];
   }
 }

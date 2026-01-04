@@ -4,20 +4,60 @@ import {
   getQuantumRandomNumbers,
   interpretQuantumResponse,
 } from "@/lib/qrng";
+import {
+  generateOracleResponse,
+  checkOllamaHealth,
+  type QuantumConstraints,
+} from "@/lib/ollama";
 import { getOrCreateUser } from "@/lib/user";
-import { saveConsultation, canConsultToday, FREE_DAILY_LIMIT } from "@/lib/consultations";
+import { saveConsultation } from "@/lib/consultations";
+
+interface ResponseData {
+  response: string;
+  generatedBy: "ollama" | "fallback";
+  constraints?: QuantumConstraints;
+}
+
+async function generateResponse(
+  question: string,
+  numbers: number[]
+): Promise<ResponseData> {
+  // Try Ollama first
+  const health = await checkOllamaHealth();
+
+  if (health.available && health.modelLoaded) {
+    try {
+      const oracleResponse = await generateOracleResponse(question, numbers);
+      return {
+        response: oracleResponse.text,
+        generatedBy: "ollama",
+        constraints: oracleResponse.constraints,
+      };
+    } catch (error) {
+      console.warn("Ollama generation failed, using fallback:", error);
+    }
+  } else {
+    console.info("Ollama not available, using fallback responses", health);
+  }
+
+  // Fallback to hardcoded responses
+  return {
+    response: interpretQuantumResponse(numbers),
+    generatedBy: "fallback",
+  };
+}
 
 export async function POST(request: Request) {
   try {
     const { userId: clerkId } = await auth();
 
     if (!clerkId) {
-      return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const user = await currentUser();
     if (!user?.emailAddresses?.[0]?.emailAddress) {
-      return NextResponse.json({ error: "Email requis" }, { status: 400 });
+      return NextResponse.json({ error: "Email required" }, { status: 400 });
     }
 
     const body = await request.json();
@@ -25,14 +65,14 @@ export async function POST(request: Request) {
 
     if (!question || typeof question !== "string") {
       return NextResponse.json(
-        { error: "Question requise" },
+        { error: "Question required" },
         { status: 400 }
       );
     }
 
     if (question.length > 500) {
       return NextResponse.json(
-        { error: "Question trop longue (max 500 caractères)" },
+        { error: "Question too long (max 500 characters)" },
         { status: 400 }
       );
     }
@@ -43,29 +83,25 @@ export async function POST(request: Request) {
       user.emailAddresses[0].emailAddress
     );
 
-    // Check daily limit
-    const { allowed, remaining } = await canConsultToday(dbUser.id);
-    if (!allowed) {
-      return NextResponse.json(
-        {
-          error: `Limite quotidienne atteinte (${FREE_DAILY_LIMIT} consultations/jour)`,
-          code: "DAILY_LIMIT_REACHED",
-          remaining: 0,
-        },
-        { status: 429 }
-      );
-    }
-
     // Get quantum random numbers
     const quantumResult = await getQuantumRandomNumbers(8);
-    const response = interpretQuantumResponse(quantumResult.numbers);
+
+    // Generate response (Ollama or fallback)
+    const { response, generatedBy, constraints } = await generateResponse(
+      question,
+      quantumResult.numbers
+    );
 
     // Save consultation to database
     const consultation = await saveConsultation(
       dbUser.id,
       question,
       response,
-      JSON.stringify(quantumResult)
+      JSON.stringify({
+        ...quantumResult,
+        generatedBy,
+        constraints,
+      })
     );
 
     return NextResponse.json({
@@ -76,14 +112,16 @@ export async function POST(request: Request) {
         numbers: quantumResult.numbers,
         timestamp: quantumResult.timestamp,
         source: quantumResult.source,
+        generatedBy,
+        energy: constraints?.energy,
+        category: constraints?.category,
       },
       createdAt: consultation.createdAt,
-      remaining: remaining - 1,
     });
   } catch (error) {
     console.error("Consultation error:", error);
     return NextResponse.json(
-      { error: "Erreur lors de la consultation" },
+      { error: "Consultation error" },
       { status: 500 }
     );
   }
