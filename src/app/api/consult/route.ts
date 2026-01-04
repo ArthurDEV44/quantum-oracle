@@ -174,6 +174,9 @@ export async function POST(request: Request) {
       })
     );
 
+    // Build esoteric summary for response
+    const esoteric = constraints?.esoteric;
+
     return NextResponse.json({
       id: consultation.id,
       question: trimmedQuestion,
@@ -186,6 +189,42 @@ export async function POST(request: Request) {
         energy: constraints?.energy,
         category: constraints?.category,
       },
+      esotericReading: esoteric
+        ? {
+            iChing: {
+              hexagram: esoteric.iChing.hexagramNumber,
+              name: esoteric.iChing.hexagramName,
+              symbol: esoteric.iChing.hexagramSymbol,
+              meaning: esoteric.iChing.meaning,
+            },
+            tarot: {
+              arcana: esoteric.tarot.arcanaNumber,
+              name: esoteric.tarot.arcanaName,
+              symbol: esoteric.tarot.arcanaSymbol,
+              keywords: esoteric.tarot.keywords,
+            },
+            kabbalah: {
+              sefirah: esoteric.kabbalah.sefirahNumber,
+              name: esoteric.kabbalah.sefirahName,
+              hebrew: esoteric.kabbalah.sefirahHebrew,
+              attribute: esoteric.kabbalah.attribute,
+            },
+            hermetic: {
+              principle: esoteric.hermetic.principleNumber,
+              name: esoteric.hermetic.principleName,
+              axiom: esoteric.hermetic.axiom,
+            },
+            elements: {
+              dominant: esoteric.elements.dominant,
+              balance: esoteric.elements.balance,
+            },
+            sacredGeometry: {
+              phiResonance: esoteric.sacredGeometry.phiResonance,
+              harmonicFrequency: esoteric.sacredGeometry.harmonicFrequency,
+            },
+            synthesis: esoteric.synthesis,
+          }
+        : undefined,
       createdAt: consultation.createdAt,
     });
   } catch (error) {

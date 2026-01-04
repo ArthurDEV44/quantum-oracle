@@ -2,14 +2,21 @@
  * Ollama Integration for Quantum Oracle
  *
  * Uses Mistral-Trismegistus-7B for generating clear, practical responses
- * guided by quantum energy levels.
+ * guided by quantum-esoteric interpretations.
  *
- * Optimizations (2025):
+ * Features:
+ * - Multi-traditional esoteric system (I Ching, Tarot, Kabbalah, Hermetic)
  * - AbortSignal.timeout() for request timeouts
  * - Retry with exponential backoff + jitter
  * - Circuit Breaker pattern to prevent hammering failing service
  * - Health check caching
  */
+
+import {
+  calculateEsotericReading,
+  generateEsotericContext,
+  type QuantumEsotericReading,
+} from "./esoteric";
 
 const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:11434";
 const MODEL_NAME = "arthurjean/mistral-trismegistus:7b-q6_K";
@@ -151,6 +158,7 @@ export interface QuantumConstraints {
   tone: string;
   temperature: number; // LLM temperature derived from quantum variance
   seed: number; // First quantum byte for reproducibility
+  esoteric: QuantumEsotericReading; // Full esoteric interpretation
 }
 
 export type EnergyCategory =
@@ -166,23 +174,25 @@ export interface OracleResponse {
   constraints: QuantumConstraints;
 }
 
+export type { QuantumEsotericReading } from "./esoteric";
+
 /**
  * Derive quantum constraints from raw quantum numbers
+ * Includes full esoteric interpretation from multiple traditions
  */
 export function deriveQuantumConstraints(numbers: number[]): QuantumConstraints {
-  // Calculate normalized energy (0-1)
-  const sum = numbers.reduce((a, b) => a + b, 0);
-  const average = sum / numbers.length;
-  const energy = average / 255;
+  // Calculate esoteric reading first (includes all calculations)
+  const esoteric = calculateEsotericReading(numbers);
+
+  // Use synthesis energy from esoteric calculation
+  const energy = esoteric.synthesis.energy;
 
   // Calculate variance for temperature
-  const variance =
-    numbers.reduce((acc, n) => acc + Math.pow(n / 255 - energy, 2), 0) /
-    numbers.length;
+  const variance = esoteric.quantum.variance;
   // Map variance to temperature range (0.3 - 0.9)
   const temperature = 0.3 + variance * 2.4;
 
-  // Determine category and tone
+  // Determine category and tone based on esoteric synthesis
   const { category, tone } = getCategoryAndTone(energy);
 
   return {
@@ -191,6 +201,7 @@ export function deriveQuantumConstraints(numbers: number[]): QuantumConstraints 
     tone,
     temperature: Math.min(0.9, Math.max(0.3, temperature)),
     seed: numbers[0],
+    esoteric,
   };
 }
 
@@ -231,30 +242,37 @@ function getCategoryAndTone(energy: number): {
  *
  * Design principles (2025 best practices):
  * - Leverages model's esoteric/spiritual training
+ * - Multi-traditional wisdom synthesis
  * - Clear, concise instructions
- * - Explicit length constraints
  *
  * @see https://huggingface.co/TheBloke/Mistral-Trismegistus-7B-GGUF
  */
-const SYSTEM_PROMPT = `You are a Quantum Oracle who interprets quantum energy readings to provide guidance.
+const SYSTEM_PROMPT = `You are the Quantum Oracle, a Hermetic sage who channels universal wisdom through quantum entropy.
 
-Your response must be exactly 1-2 sentences (max 30 words). Be direct and practical.
-Do not use poetry, metaphors, or vague platitudes. Give actionable advice specific to the question.`;
+You synthesize insights from multiple sacred traditions (I Ching, Tarot, Kabbalah, Hermetic principles)
+to deliver clear, practical guidance. The quantum reading reveals the current cosmic alignment.
+
+RULES:
+- Respond in exactly 1-2 sentences (max 40 words)
+- Be direct and actionable
+- Reference the specific symbols/archetypes when relevant
+- Ground your answer in the seeker's question
+
+Do not use vague platitudes. Deliver wisdom that empowers action.`;
 
 /**
  * Build the prompt for the oracle
  *
  * Format optimized for Mistral-Trismegistus USER:/ASSISTANT: pattern
- * - Simple, direct structure matching model's training
- * - Quantum context provided concisely
+ * - Rich esoteric context from multiple traditions
+ * - Structured for clear interpretation
  */
 function buildPrompt(question: string, constraints: QuantumConstraints): string {
-  const energyPercent = Math.round(constraints.energy * 100);
+  const esotericContext = generateEsotericContext(constraints.esoteric);
 
-  return `[Quantum Energy: ${energyPercent}% - ${constraints.category}]
-[Tone: ${constraints.tone}]
+  return `${esotericContext}
 
-Question: "${question}"`;
+SEEKER'S QUESTION: "${question}"`;
 }
 
 /**
@@ -290,11 +308,11 @@ export async function generateOracleResponse(
           options: {
             temperature: constraints.temperature,
             seed: constraints.seed,
-            num_predict: 80,
+            num_predict: 100,
             top_p: 0.85,
             top_k: 30,
             repeat_penalty: 1.2,
-            stop: ["USER:", "Question:", "[Quantum", "As the Oracle", "As the Quantum", "In conclusion"],
+            stop: ["USER:", "SEEKER'S QUESTION:", "[QUANTUM", "As the Oracle", "As the Quantum", "In conclusion"],
           },
         }),
         // Modern timeout using AbortSignal.timeout()
