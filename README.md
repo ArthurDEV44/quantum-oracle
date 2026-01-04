@@ -702,6 +702,92 @@ Mesure quantique → Résultat
 
 ---
 
+## Interface utilisateur : transparence totale
+
+L'interface de résultat est conçue pour être **entièrement transparente** — aucune magie, aucun mystère. Chaque calcul est explicable et vérifiable.
+
+### Structure de l'affichage
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    LA RÉPONSE DE L'ORACLE                           │
+│         "Conseil clair généré par le LLM..."                        │
+└─────────────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│              COMPRENDRE LES EMPREINTES QUANTIQUES                   │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  ┌──────────────┐     ┌──────────────┐     ┌──────────────┐        │
+│  │    Source    │ ──▶ │   8 Bytes    │ ──▶ │Interprétations│       │
+│  │  Quantique   │     │  Aléatoires  │     │  6 traditions │       │
+│  │  (LfD/NIST)  │     │  Somme: 1042 │     │               │       │
+│  └──────────────┘     └──────────────┘     └──────────────┘        │
+│                                                                     │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐                   │
+│  │  Synthèse   │ │  Traditions │ │Données Brutes│  ← Onglets      │
+│  └─────────────┘ └─────────────┘ └─────────────┘                   │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Les trois onglets
+
+| Onglet | Contenu | Public cible |
+|--------|---------|--------------|
+| **Synthèse** | Énergie, Polarité, Phase, Tonalité Cosmique | Tout le monde |
+| **Traditions** | I Ching, Tarot, Kabbalah, Hermétique, Éléments, Géométrie | Curieux |
+| **Données Brutes** | Bytes hex/décimal, statistiques, **explications des calculs** | Sceptiques/Développeurs |
+
+### Section "Comprendre les calculs"
+
+Dans l'onglet **Données Brutes**, une section dédiée explique :
+
+1. **Qu'est-ce que "mod" (modulo) ?**
+   ```
+   Le modulo est le reste de la division entière.
+
+   Exemple avec somme = 1042 et 22 arcanes du Tarot :
+   1042 ÷ 22 = 47 (partie entière)
+   47 × 22 = 1034
+   1042 - 1034 = 10 (le reste = résultat)
+
+   Vérification : (47 × 22) + 10 = 1042 ✓
+   ```
+
+2. **Pourquoi ces nombres spécifiques ?**
+   | Nombre | Signification |
+   |--------|---------------|
+   | 22 | Arcanes majeurs du Tarot (Le Mat à Le Monde) |
+   | 10 | Sefirot de l'Arbre de Vie kabbalistique |
+   | 7 | Principes hermétiques du Kybalion |
+   | 64 | Hexagrammes du I Ching (8 × 8 trigrammes) |
+   | 255 | Valeur max d'un byte, pour normaliser en % |
+
+3. **Calculs détaillés avec les vraies valeurs**
+   ```
+   Tarot:     1042 mod 22 = 10 → Arcane #10
+   Kabbalah:  (1042 mod 10) + 1 = 3 → Sefirah #3
+   Hermétique: (1042 mod 7) + 1 = 4 → Principe #4
+   Énergie:   moyenne / 255 = 51.2%
+   ```
+
+### Tooltips explicatifs
+
+Chaque section importante a une icône `?` qui affiche une explication au survol :
+
+- **Énergie** : "La moyenne des bytes, normalisée entre 0 et 1, représente le niveau d'énergie cosmique."
+- **Polarité** : "Le ratio de bytes pairs (yin) vs impairs (yang) détermine la polarité."
+- **I Ching** : "Les 6 premiers bytes génèrent les lignes yin/yang via leurs bits de poids faible."
+
+### Message de transparence
+
+> "Aucune magie ici : ce sont des formules mathématiques déterministes.
+> Les mêmes bytes donneront toujours les mêmes résultats."
+
+---
+
 ## La philosophie
 
 > "L'univers quantique ne prédit pas ton avenir. Il te rappelle que le futur n'est pas écrit — que chaque moment contient une infinité de possibilités. La réponse que tu reçois n'est pas LA vérité, mais UN point de départ pour ta propre réflexion."
