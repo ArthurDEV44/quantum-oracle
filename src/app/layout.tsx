@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-import { Navbar } from "@/components";
+import { Navbar, Footer } from "@/components";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -15,6 +15,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : "http://localhost:3000"
+  ),
   title: {
     template: "%s | Quantum Oracle",
     default: "Quantum Oracle | La Sagesse de l'Entropie",
@@ -46,14 +51,13 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="fr" className="dark">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
-        >
-          <div className="film-grain" />
-          <div className="volumetric-rays" />
-          
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white min-h-screen flex flex-col`}
+        >          
           <Navbar />
           
-          <main className="relative z-10 pt-20">{children}</main>
+          <main className="relative z-10 pt-20 flex-1">{children}</main>
+
+          <Footer />
         </body>
       </html>
     </ClerkProvider>

@@ -103,19 +103,6 @@ export default function HomeClient() {
 
         <HowItWorksSection />
       </main>
-
-      <footer className="border-t border-neutral-900 py-12 bg-black/50 backdrop-blur-sm">
-        <div className="max-w-4xl mx-auto px-4 text-center space-y-4">
-          <p className="text-neutral-500 text-sm tracking-widest uppercase">
-            Propulsé par des générateurs de nombres aléatoires quantiques
-          </p>
-          <div className="flex justify-center gap-6 text-neutral-600 text-xs font-mono">
-            <span>LFH</span>
-            <span>NIST BEACON</span>
-            <span>WEB CRYPTO</span>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 // General Components
 export * from "./Navbar";
+export * from "./Footer";
 
 // Components for History Page
 export * from "./history/HistoryHeroSection";
