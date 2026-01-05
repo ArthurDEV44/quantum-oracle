@@ -35,8 +35,6 @@ export const subscriptions = pgTable("subscriptions", {
     .notNull(),
   tier: subscriptionTierEnum("tier").default("free").notNull(),
   status: subscriptionStatusEnum("status").default("active").notNull(),
-  stripeCustomerId: text("stripe_customer_id"),
-  stripeSubscriptionId: text("stripe_subscription_id"),
   currentPeriodEnd: timestamp("current_period_end"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
