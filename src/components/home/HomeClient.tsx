@@ -65,14 +65,14 @@ export default function HomeClient() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-violet-900/30 border-t-violet-500 rounded-full animate-spin" />
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-violet-500/30">
+    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-500/30">
       <HomeHeroSection isSignedIn={isSignedIn} />
 
       <main className="pb-24">
@@ -87,7 +87,7 @@ export default function HomeClient() {
 
             {error && (
               <div className="max-w-2xl mx-auto px-4 mb-8">
-                <div className="bg-red-900/20 border border-red-800/50 rounded-2xl p-4 text-red-400 text-center flex items-center justify-center gap-2">
+                <div className="bg-red-50 border border-red-100 rounded-2xl p-4 text-red-600 text-center flex items-center justify-center gap-2">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>

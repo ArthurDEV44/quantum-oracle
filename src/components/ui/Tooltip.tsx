@@ -21,9 +21,9 @@ export const Tooltip = ({ children, content }: TooltipProps) => {
         {children}
       </span>
       {isVisible && (
-        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs text-white bg-neutral-800 border border-neutral-700 rounded-lg shadow-xl z-50 w-64 text-center whitespace-normal">
+        <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-2 text-xs text-slate-700 bg-white border border-slate-200 rounded-lg shadow-xl shadow-slate-200/50 z-50 w-64 text-center whitespace-normal">
           {content}
-          <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-neutral-800" />
+          <span className="absolute top-full left-1/2 -translate-x-1/2 border-4 border-transparent border-t-white" />
         </span>
       )}
     </span>
@@ -32,7 +32,7 @@ export const Tooltip = ({ children, content }: TooltipProps) => {
 
 export const HelpIcon = () => (
   <svg
-    className="w-3.5 h-3.5 ml-1 text-neutral-500 hover:text-neutral-300 transition-colors inline"
+    className="w-3.5 h-3.5 ml-1 text-slate-400 hover:text-indigo-600 transition-colors inline"
     fill="none"
     stroke="currentColor"
     viewBox="0 0 24 24"
