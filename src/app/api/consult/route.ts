@@ -9,6 +9,10 @@ import {
   checkOllamaHealth,
   type QuantumConstraints,
 } from "@/lib/ollama";
+import {
+  generateMistralResponse,
+  isMistralConfigured,
+} from "@/lib/mistral";
 import { getOrCreateUser } from "@/lib/user";
 import { saveConsultation } from "@/lib/consultations";
 
@@ -52,7 +56,7 @@ function createErrorResponse(
 
 interface ResponseData {
   response: string;
-  generatedBy: "ollama" | "fallback";
+  generatedBy: "mistral" | "ollama" | "fallback";
   constraints?: QuantumConstraints;
 }
 
@@ -60,7 +64,23 @@ async function generateResponse(
   question: string,
   numbers: number[]
 ): Promise<ResponseData> {
-  // Try Ollama first (health check is cached, so this is fast)
+  // Priority 1: Mistral API (production/cloud)
+  if (isMistralConfigured()) {
+    try {
+      const mistralResponse = await generateMistralResponse(question, numbers);
+      return {
+        response: mistralResponse.text,
+        generatedBy: "mistral",
+        constraints: mistralResponse.constraints,
+      };
+    } catch (error) {
+      if (isDev) {
+        console.warn("Mistral generation failed, trying Ollama:", error);
+      }
+    }
+  }
+
+  // Priority 2: Ollama (local development)
   const health = await checkOllamaHealth();
 
   if (health.available && health.modelLoaded) {
@@ -80,7 +100,7 @@ async function generateResponse(
     console.info("Ollama not available, using fallback responses", health);
   }
 
-  // Fallback to hardcoded responses
+  // Priority 3: Hardcoded fallback
   return {
     response: interpretQuantumResponse(numbers),
     generatedBy: "fallback",
