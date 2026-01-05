@@ -13,6 +13,6 @@ export { default as HistoryClient } from "./history/HistoryClient";
 export * from "./home/HomeHeroSection";
 export * from "./home/ConsultFormSection";
 export * from "./home/ConsultResultSection";
-export * from "./home/HowItWorksSection";
+export * from "./home/how-it-works";
 export { default as HomeClient } from "./home/HomeClient";
 
