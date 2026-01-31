@@ -65,14 +65,16 @@ export default function HomeClient() {
 
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-indigo-100 border-t-indigo-600 rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-orange-100 border-t-orange-500 rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-500/30">
+    <div className="min-h-screen text-slate-900 selection:bg-orange-300/30 relative">
+      {/* Mesh gradient background */}
+      <div className="mesh-gradient" aria-hidden="true" />
       <HomeHeroSection isSignedIn={isSignedIn} />
 
       <main className="pb-24">

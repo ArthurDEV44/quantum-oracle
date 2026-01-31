@@ -2,14 +2,21 @@ import Link from "next/link";
 
 export const HistoryEmptyState = () => {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-      <div className="bg-white border border-slate-100 rounded-3xl p-12 space-y-6 shadow-xl shadow-slate-200/50">
-        <div className="w-20 h-20 bg-indigo-50 rounded-full flex items-center justify-center mx-auto text-indigo-600">
+    <div className="max-w-4xl mx-auto px-6 py-20 text-center">
+      <div className="bg-white/40 backdrop-blur-sm border border-slate-100 rounded-2xl p-12 space-y-6">
+        <div
+          className="w-16 h-16 rounded-full flex items-center justify-center mx-auto text-orange-400/70"
+          style={{
+            background:
+              "radial-gradient(circle, hsla(28, 100%, 72%, 0.1) 0%, transparent 70%)",
+          }}
+        >
           <svg
-            className="w-10 h-10"
+            className="w-8 h-8"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
+            aria-hidden="true"
           >
             <path
               strokeLinecap="round"
@@ -20,14 +27,21 @@ export const HistoryEmptyState = () => {
           </svg>
         </div>
         <div className="space-y-2">
-          <h3 className="text-xl font-semibold text-slate-900">Aucune consultation</h3>
-          <p className="text-slate-500 max-w-sm mx-auto">
-            Votre historique est encore vierge. Posez votre première question à l&apos;Oracle pour commencer votre voyage.
+          <h3 className="text-slate-800 text-base font-medium">
+            Aucune consultation
+          </h3>
+          <p className="text-slate-500 text-sm max-w-xs mx-auto font-light leading-relaxed">
+            Votre historique est encore vierge. Posez votre première question à
+            l&apos;Oracle pour commencer.
           </p>
         </div>
         <Link
           href="/"
-          className="inline-block px-8 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-medium transition-all shadow-lg shadow-indigo-200"
+          className="inline-block px-7 py-2.5 text-[11px] uppercase tracking-[0.2em] font-mono text-white rounded-full hover:opacity-90 transition-opacity duration-200 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2"
+          style={{
+            background:
+              "linear-gradient(135deg, #f97316 0%, #a855f7 100%)",
+          }}
         >
           Consulter l&apos;Oracle
         </Link>
@@ -35,4 +49,3 @@ export const HistoryEmptyState = () => {
     </div>
   );
 };
-

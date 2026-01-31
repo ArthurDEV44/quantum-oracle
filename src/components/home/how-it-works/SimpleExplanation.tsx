@@ -2,59 +2,81 @@
  * Simple/Intuitive Explanation View
  */
 
-import { STEPS, KEY_POINTS, COLOR_CLASSES } from "./constants";
+import { STEPS, KEY_POINTS } from "./constants";
 
-function Arrow() {
-  return (
-    <div className="text-slate-200 rotate-90 md:rotate-0 shrink-0">
-      <svg className="w-8 h-8 md:w-10 md:h-10 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-      </svg>
-    </div>
-  );
-}
+const STEP_ACCENTS = [
+  "border-orange-200/60 text-orange-500",
+  "border-violet-200/60 text-violet-500",
+  "border-blue-200/60 text-blue-500",
+  "border-emerald-200/60 text-emerald-500",
+];
 
 export function SimpleExplanation() {
   return (
-    <div className="space-y-20 animate-in fade-in slide-in-from-bottom-8 duration-700">
-      {/* Visual Flow Diagram */}
-      <div className="bg-white border border-slate-100 rounded-4xl p-10 md:p-16 shadow-xl shadow-slate-200/50 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/5 blur-3xl rounded-full -mr-32 -mt-32" />
-
-        <h3 className="text-xl font-semibold text-slate-900 mb-12 text-center tracking-wide uppercase">
+    <div className="space-y-20">
+      {/* Flow Diagram */}
+      <div className="border border-slate-100 rounded-2xl p-8 md:p-14 bg-white/40 backdrop-blur-sm">
+        <h3 className="text-[11px] tracking-[0.3em] uppercase text-slate-500 font-mono mb-12 text-center">
           Le Voyage d&apos;une Consultation
         </h3>
 
-        <div className="flex flex-col md:flex-row items-center justify-between gap-12 relative z-10">
-          {STEPS.map((step, index) => (
-            <div key={step.title} className="contents">
-              <div className="group flex flex-col items-center text-center flex-1 space-y-4">
-                <div className={`w-20 h-20 rounded-4xl ${step.colorClass} border flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-500`}>
-                  <span className="text-3xl">{step.emoji}</span>
+        <div className="relative">
+          {/* Connecting line - desktop */}
+          <div
+            className="hidden md:block absolute top-6 left-[12.5%] right-[12.5%] h-px"
+            style={{
+              background:
+                "linear-gradient(90deg, hsla(28, 90%, 60%, 0.25), hsla(270, 70%, 60%, 0.25), hsla(220, 80%, 60%, 0.25), hsla(160, 60%, 50%, 0.25))",
+            }}
+            aria-hidden="true"
+          />
+
+          {/* Connecting line - mobile */}
+          <div
+            className="md:hidden absolute top-0 bottom-0 left-6 w-px"
+            style={{
+              background:
+                "linear-gradient(180deg, hsla(28, 90%, 60%, 0.25), hsla(270, 70%, 60%, 0.25), hsla(220, 80%, 60%, 0.25), hsla(160, 60%, 50%, 0.25))",
+            }}
+            aria-hidden="true"
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-0">
+            {STEPS.map((step, i) => (
+              <div
+                key={step.title}
+                className="flex md:flex-col items-center md:text-center gap-5 md:gap-0 md:px-4"
+              >
+                <div
+                  className={`w-12 h-12 shrink-0 rounded-full border flex items-center justify-center text-sm font-mono relative bg-white ${STEP_ACCENTS[i]}`}
+                >
+                  {String(i + 1).padStart(2, "0")}
                 </div>
-                <div className="space-y-1">
-                  <p className="text-slate-900 font-bold tracking-tight">{step.title}</p>
-                  <p className="text-slate-500 text-xs">{step.description}</p>
+                <div className="md:mt-4">
+                  <p className="text-slate-800 text-sm font-medium tracking-tight">
+                    {step.title}
+                  </p>
+                  <p className="text-slate-500 text-xs mt-0.5 font-light">
+                    {step.description}
+                  </p>
                 </div>
               </div>
-              {index < STEPS.length - 1 && <Arrow />}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Key Points */}
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-2 gap-5">
         {KEY_POINTS.map((item) => (
           <div
             key={item.title}
-            className="group p-8 bg-white border border-slate-100 hover:border-indigo-100 rounded-3xl transition-all duration-300 shadow-sm hover:shadow-xl hover:shadow-indigo-50/50"
+            className="p-7 border border-slate-100 rounded-2xl bg-white/40 backdrop-blur-sm"
           >
-            <div className={`w-12 h-12 rounded-2xl mb-6 flex items-center justify-center transition-transform group-hover:scale-110 duration-300 ${COLOR_CLASSES[item.color]}`}>
-              {item.icon}
-            </div>
-            <h4 className="text-slate-900 font-bold mb-3 text-lg">{item.title}</h4>
-            <p className="text-slate-500 text-sm leading-relaxed">
+            <h4 className="text-slate-800 text-sm font-medium mb-2 tracking-tight">
+              {item.title}
+            </h4>
+            <p className="text-slate-500 text-xs leading-relaxed font-light">
               {item.desc}
             </p>
           </div>

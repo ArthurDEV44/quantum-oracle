@@ -2,12 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import { Cormorant_Garamond } from "next/font/google";
 import {
   HistoryHeroSection,
   HistoryListSection,
   HistorySkeleton,
   HistoryEmptyState,
 } from "@/components";
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400"],
+});
 
 interface Consultation {
   id: string;
@@ -39,7 +45,9 @@ export default function HistoryClient() {
       const data = await response.json();
       setConsultations(data.consultations);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Une erreur est survenue");
+      setError(
+        err instanceof Error ? err.message : "Une erreur est survenue"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -47,7 +55,8 @@ export default function HistoryClient() {
 
   if (!isLoaded || isLoading) {
     return (
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen relative">
+        <div className="mesh-gradient" aria-hidden="true" />
         <HistoryHeroSection />
         <HistorySkeleton />
       </div>
@@ -56,30 +65,46 @@ export default function HistoryClient() {
 
   if (!isSignedIn) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-4">
-        <div className="text-center space-y-6 max-w-md bg-white border border-slate-200 p-8 rounded-3xl shadow-xl shadow-slate-200/50">
-          <h1 className="text-3xl font-bold text-slate-900">Historique</h1>
-          <p className="text-slate-500">
-            Veuillez vous connecter pour accéder à vos chroniques quantiques et retrouver la sagesse de l&apos;Oracle.
+      <div className="min-h-screen relative flex flex-col items-center justify-center p-4">
+        <div className="mesh-gradient" aria-hidden="true" />
+        <div className="relative z-10 text-center space-y-6 max-w-md bg-white/50 backdrop-blur-xl border border-white/60 p-10 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.03)]">
+          <h1
+            className={`${cormorant.className} text-3xl font-light text-slate-900`}
+          >
+            Historique
+          </h1>
+          <p className="text-slate-500 text-sm leading-relaxed font-light">
+            Veuillez vous connecter pour accéder à vos chroniques quantiques et
+            retrouver la sagesse de l&apos;Oracle.
           </p>
-          <div className="pt-4">
-            {/* Clerk Sign In logic should ideally be here if not handled by middleware */}
-          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 selection:bg-indigo-500/30">
+    <div className="min-h-screen text-slate-900 selection:bg-orange-300/30 relative">
+      <div className="mesh-gradient" aria-hidden="true" />
+
       <HistoryHeroSection />
-      
-      <main className="pb-20">
+
+      <main className="pb-20 relative z-10">
         {error && (
-          <div className="max-w-4xl mx-auto px-4 mb-8">
-            <div className="bg-red-50 border border-red-100 rounded-2xl p-4 text-red-600 text-center flex items-center justify-center gap-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <div className="max-w-4xl mx-auto px-6 mb-8">
+            <div className="bg-red-50/60 backdrop-blur-sm border border-red-200/40 rounded-2xl p-4 text-red-600 text-center text-sm flex items-center justify-center gap-2">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               {error}
             </div>
@@ -95,4 +120,3 @@ export default function HistoryClient() {
     </div>
   );
 }
-
