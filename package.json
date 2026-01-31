@@ -17,26 +17,26 @@
     "ollama:setup": "bash scripts/setup-ollama.sh"
   },
   "dependencies": {
-    "@clerk/nextjs": "^6.36.5",
+    "@clerk/nextjs": "^6.37.1",
     "@neondatabase/serverless": "^1.0.2",
     "drizzle-orm": "^0.45.1",
-    "next": "16.1.1",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "next": "16.1.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@types/node": "^25.1.0",
+    "@types/react": "^19.2.10",
+    "@types/react-dom": "^19.2.3",
     "drizzle-kit": "^0.31.8",
-    "eslint": "^9",
-    "eslint-config-next": "16.1.1",
+    "eslint": "^9.39.2",
+    "eslint-config-next": "16.1.6",
     "eslint-config-prettier": "^10.1.8",
-    "pg": "^8.16.3",
-    "prettier": "^3.7.4",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "pg": "^8.18.0",
+    "prettier": "^3.8.1",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3"
   },
   "ignoreScripts": [
     "sharp",
