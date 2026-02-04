@@ -2,7 +2,7 @@
 
 > Connectez vos décisions à l'incertitude fondamentale de l'univers.
 
-Quantum Oracle est une application web qui génère des réponses en utilisant de **vrais nombres aléatoires quantiques** combinés à un **LLM local** — pas des algorithmes pseudo-aléatoires classiques.
+Quantum Oracle est une application web qui génère des réponses en utilisant de **vrais nombres aléatoires quantiques** combinés à un **LLM** (Mistral AI) — pas des algorithmes pseudo-aléatoires classiques.
 
 ---
 
@@ -12,7 +12,7 @@ Quantum Oracle est une application web qui génère des réponses en utilisant d
 
 **Non.** Quantum Oracle n'utilise pas un ordinateur quantique (comme ceux d'IBM ou Google).
 
-Il utilise un **QRNG (Quantum Random Number Generator)** — un dispositif physique qui mesure des phénomènes quantiques réels pour générer des nombres véritablement aléatoires. Ces nombres **guident ensuite un LLM** (Mistral-Trismegistus) pour générer des réponses uniques.
+Il utilise un **QRNG (Quantum Random Number Generator)** — un dispositif physique qui mesure des phénomènes quantiques réels pour générer des nombres véritablement aléatoires. Ces nombres **guident ensuite un LLM** (Mistral AI) pour générer des réponses uniques.
 
 ### Quelle est la différence ?
 
@@ -43,7 +43,7 @@ Il utilise un **QRNG (Quantum Random Number Generator)** — un dispositif physi
 │  Ta question │────▶│         Quantum Oracle              │────▶│  Ta réponse      │
 │              │     │                                     │     │                  │
 │ "Dois-je..." │     │  ┌─────────┐    ┌──────────────┐   │     │ Conseil clair    │
-└──────────────┘     │  │  QRNG   │───▶│   Ollama     │   │     │ et pratique      │
+└──────────────┘     │  │  QRNG   │───▶│  Mistral AI  │   │     │ et pratique      │
                      │  │   API   │    │   (LLM)      │   │     └──────────────────┘
                      │  └────┬────┘    └──────────────┘   │
                      │       │                ▲           │
@@ -76,7 +76,7 @@ Il utilise un **QRNG (Quantum Random Number Generator)** — un dispositif physi
 
 4. **Interprétation ésotérique** → Les nombres quantiques sont transformés en lecture multi-traditionnelle
 
-5. **Génération LLM** → Mistral-Trismegistus génère une réponse guidée par le contexte ésotérique
+5. **Génération LLM** → Mistral AI génère une réponse guidée par le contexte ésotérique
 
 6. **Ta réponse** → Tu reçois un conseil clair et pratique, unique à cet instant quantique
 
@@ -445,7 +445,7 @@ Toutes les traditions convergent vers une synthèse unifiée.
 
 ## Contexte envoyé au LLM
 
-Le système génère un contexte structuré pour guider Mistral-Trismegistus:
+Le système génère un contexte structuré pour guider Mistral AI:
 
 ```
 [QUANTUM ESOTERIC READING]
@@ -536,14 +536,14 @@ Le système implémente une chaîne de fournisseurs avec fallback automatique:
 
 ---
 
-## L'intégration LLM (Ollama)
+## L'intégration LLM (Mistral AI)
 
-### Le modèle : Mistral-Trismegistus
+### Le modèle : Mistral Small
 
 ```
-Modèle: arthurjean/mistral-trismegistus:7b-q6_K
+Modèle: Mistral Small (via API Mistral AI)
 Spécialisation: Contenu ésotérique et spirituel
-Hébergement: Ollama (serveur local)
+Hébergement: API cloud Mistral AI
 ```
 
 ### Comment les nombres quantiques guident le LLM
@@ -594,9 +594,9 @@ RULES:
 Do not use vague platitudes. Deliver wisdom that empowers action.
 ```
 
-### Fallback si Ollama indisponible
+### Fallback si Mistral indisponible
 
-Si le LLM n'est pas accessible, le système utilise des réponses pré-écrites sélectionnées selon la catégorie d'énergie quantique.
+Si l'API Mistral n'est pas accessible ou pas configurée, le système utilise des réponses pré-écrites sélectionnées selon la catégorie d'énergie quantique.
 
 ---
 
@@ -607,7 +607,7 @@ Si le LLM n'est pas accessible, le système utilise des réponses pré-écrites 
 | Les 8 octets bruts (47, 182, 91...) | **Quantique** — Mesure physique réelle |
 | L'hexagramme I Ching, l'arcane, etc. | **Algorithmique** — Formules déterministes sur octets quantiques |
 | L'énergie, variance, température | **Algorithmique** — Formules déterministes |
-| Le texte de la réponse | **IA (LLM)** — Généré par Mistral-Trismegistus |
+| Le texte de la réponse | **IA (LLM)** — Généré par Mistral AI |
 | Le "caractère" de la réponse | **Hybride** — LLM contraint par contexte ésotérique quantique |
 
 ---
@@ -654,11 +654,11 @@ Mesure quantique → Résultat
      ┌────────────────────┼────────────────────┐
      ▼                    ▼                    ▼
 ┌──────────┐       ┌───────────┐        ┌───────────┐
-│  NeonDB  │       │   QRNG    │        │  Ollama   │
+│  NeonDB  │       │   QRNG    │        │Mistral AI │
 │(Postgres)│       │  Chain    │        │  (LLM)    │
 │          │       │           │        │           │
-│Historique│       │LfD → NIST │        │ Mistral-  │
-│Utilisateurs│     │→ Crypto   │        │Trismegistus│
+│Historique│       │LfD → NIST │        │  Mistral  │
+│Utilisateurs│     │→ Crypto   │        │  Small    │
 └──────────┘       └───────────┘        └───────────┘
 ```
 
@@ -672,7 +672,7 @@ Mesure quantique → Résultat
 | Database | NeonDB (Serverless Postgres) |
 | ORM | Drizzle |
 | QRNG | LfD (primaire) → NIST (secondaire) → Web Crypto (fallback) |
-| LLM | Ollama + Mistral-Trismegistus-7B |
+| LLM | Mistral AI (Mistral Small) |
 | Hosting | Vercel |
 | Package Manager | Bun |
 
@@ -682,7 +682,6 @@ Mesure quantique → Résultat
 |----------|---------|------|-------------|
 | `/api/consult` | POST | Requis | Soumettre une question, recevoir une réponse |
 | `/api/history` | GET | Requis | Récupérer l'historique des consultations |
-| `/api/ollama/health` | GET | Public | Vérifier la disponibilité d'Ollama |
 
 ---
 
@@ -806,13 +805,7 @@ bun install
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=...
 CLERK_SECRET_KEY=...
 DATABASE_URL=...
-OLLAMA_URL=http://localhost:11434  # Optionnel, localhost par défaut
-
-# Setup Ollama (LLM local)
-bun run ollama:setup
-# Ou manuellement:
-ollama pull arthurjean/mistral-trismegistus:7b-q6_K
-ollama serve
+MISTRAL_API_KEY=...  # Optionnel, fallback vers réponses pré-écrites
 
 # Lancer
 bun dev

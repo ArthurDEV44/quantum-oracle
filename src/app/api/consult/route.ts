@@ -5,13 +5,9 @@ import {
   interpretQuantumResponse,
 } from "@/lib/qrng";
 import {
-  generateOracleResponse,
-  checkOllamaHealth,
-  type QuantumConstraints,
-} from "@/lib/ollama";
-import {
   generateMistralResponse,
   isMistralConfigured,
+  type QuantumConstraints,
 } from "@/lib/mistral";
 import { getOrCreateUser } from "@/lib/user";
 import { saveConsultation } from "@/lib/consultations";
@@ -56,7 +52,7 @@ function createErrorResponse(
 
 interface ResponseData {
   response: string;
-  generatedBy: "mistral" | "ollama" | "fallback";
+  generatedBy: "mistral" | "fallback";
   constraints?: QuantumConstraints;
 }
 
@@ -64,7 +60,6 @@ async function generateResponse(
   question: string,
   numbers: number[]
 ): Promise<ResponseData> {
-  // Priority 1: Mistral API (production/cloud)
   if (isMistralConfigured()) {
     try {
       const mistralResponse = await generateMistralResponse(question, numbers);
@@ -75,32 +70,12 @@ async function generateResponse(
       };
     } catch (error) {
       if (isDev) {
-        console.warn("Mistral generation failed, trying Ollama:", error);
+        console.warn("Mistral generation failed, using fallback:", error);
       }
     }
   }
 
-  // Priority 2: Ollama (local development)
-  const health = await checkOllamaHealth();
-
-  if (health.available && health.modelLoaded) {
-    try {
-      const oracleResponse = await generateOracleResponse(question, numbers);
-      return {
-        response: oracleResponse.text,
-        generatedBy: "ollama",
-        constraints: oracleResponse.constraints,
-      };
-    } catch (error) {
-      if (isDev) {
-        console.warn("Ollama generation failed, using fallback:", error);
-      }
-    }
-  } else if (isDev) {
-    console.info("Ollama not available, using fallback responses", health);
-  }
-
-  // Priority 3: Hardcoded fallback
+  // Fallback when Mistral is not configured or fails
   return {
     response: interpretQuantumResponse(numbers),
     generatedBy: "fallback",
@@ -176,7 +151,7 @@ export async function POST(request: Request) {
       getQuantumRandomNumbers(CONFIG.quantumBytes),
     ]);
 
-    // Generate response (Ollama or fallback)
+    // Generate response (Mistral or fallback)
     const { response, generatedBy, constraints } = await generateResponse(
       trimmedQuestion,
       quantumResult.numbers

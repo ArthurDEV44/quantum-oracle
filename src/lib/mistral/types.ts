@@ -2,13 +2,32 @@
  * Mistral API Type Definitions
  */
 
-// Re-export shared types from ollama
-export type {
-  QuantumConstraints,
-  OracleResponse,
-  EnergyCategory,
-  QuantumEsotericReading,
-} from "../ollama/types";
+import type { QuantumEsotericReading } from "../esoteric";
+
+// Re-export for convenience
+export type { QuantumEsotericReading } from "../esoteric";
+
+export type EnergyCategory =
+  | "very_low"
+  | "low"
+  | "neutral"
+  | "high"
+  | "very_high";
+
+export interface QuantumConstraints {
+  energy: number;
+  category: EnergyCategory;
+  tone: string;
+  temperature: number;
+  seed: number;
+  esoteric: QuantumEsotericReading;
+}
+
+export interface OracleResponse {
+  text: string;
+  model: string;
+  constraints: QuantumConstraints;
+}
 
 export interface MistralMessage {
   role: "system" | "user" | "assistant";

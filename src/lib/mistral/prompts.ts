@@ -1,16 +1,14 @@
 /**
  * Mistral Prompts for Quantum Oracle
  *
- * Optimized system prompt for Mistral Small to emulate
- * the esoteric/hermetic style of Mistral-Trismegistus.
+ * Optimized system prompt for Mistral Small.
  */
 
 import { generateEsotericContext } from "../esoteric";
-import type { QuantumConstraints } from "./types";
+import type { QuantumConstraints, EnergyCategory } from "./types";
 
 /**
- * System prompt crafted to guide Mistral Small toward
- * esoteric, hermetic-style responses similar to Trismegistus
+ * System prompt for Mistral Small
  */
 export const SYSTEM_PROMPT = `Tu es l'Oracle Quantique, un sage hermétique qui canalise la sagesse universelle à travers l'entropie quantique.
 
@@ -40,4 +38,39 @@ export function buildUserPrompt(
 QUESTION DU CHERCHEUR: "${question}"
 
 Réponds en français avec sagesse et clarté.`;
+}
+
+/**
+ * Get category and tone based on energy level
+ */
+export function getCategoryAndTone(energy: number): {
+  category: EnergyCategory;
+  tone: string;
+} {
+  if (energy < 0.2) {
+    return {
+      category: "very_low",
+      tone: "calm and reflective, suggesting a time for pause and consideration",
+    };
+  } else if (energy < 0.4) {
+    return {
+      category: "low",
+      tone: "measured and careful, recommending thorough preparation",
+    };
+  } else if (energy < 0.6) {
+    return {
+      category: "neutral",
+      tone: "balanced and objective, acknowledging multiple valid paths",
+    };
+  } else if (energy < 0.8) {
+    return {
+      category: "high",
+      tone: "positive and supportive, indicating good conditions for action",
+    };
+  } else {
+    return {
+      category: "very_high",
+      tone: "confident and direct, suggesting strong alignment with your goals",
+    };
+  }
 }

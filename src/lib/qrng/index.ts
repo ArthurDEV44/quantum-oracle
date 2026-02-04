@@ -128,8 +128,7 @@ export async function getQuantumChoice<T>(options: T[]): Promise<T> {
 }
 
 /**
- * Legacy function - kept for fallback when Ollama is unavailable
- * @deprecated Use generateOracleResponse from ollama.ts instead
+ * Fallback interpretation when LLM is unavailable
  */
 export function interpretQuantumResponse(numbers: number[]): string {
   const sum = numbers.reduce((a, b) => a + b, 0);

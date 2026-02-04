@@ -1,11 +1,10 @@
 /**
  * Mistral API Integration for Quantum Oracle
  *
- * Uses Mistral Small for generating esoteric oracle responses
- * when deployed to production (Vercel).
+ * Uses Mistral Small for generating esoteric oracle responses.
  */
 
-import { deriveQuantumConstraints } from "../ollama";
+import { calculateEsotericReading } from "../esoteric";
 import {
   MISTRAL_API_KEY,
   MISTRAL_API_URL,
@@ -14,17 +13,40 @@ import {
   isDev,
   isMistralConfigured,
 } from "./config";
-import { SYSTEM_PROMPT, buildUserPrompt } from "./prompts";
+import { SYSTEM_PROMPT, buildUserPrompt, getCategoryAndTone } from "./prompts";
 import type {
   MistralChatRequest,
   MistralChatResponse,
   MistralError,
   OracleResponse,
+  QuantumConstraints,
 } from "./types";
 
 // Re-exports
-export type { QuantumConstraints, OracleResponse } from "./types";
+export type { QuantumConstraints, OracleResponse, EnergyCategory } from "./types";
 export { isMistralConfigured } from "./config";
+
+/**
+ * Derive quantum constraints from raw quantum numbers
+ */
+export function deriveQuantumConstraints(
+  numbers: number[]
+): QuantumConstraints {
+  const esoteric = calculateEsotericReading(numbers);
+  const energy = esoteric.synthesis.energy;
+  const variance = esoteric.quantum.variance;
+  const temperature = 0.3 + variance * 2.4;
+  const { category, tone } = getCategoryAndTone(energy);
+
+  return {
+    energy,
+    category,
+    tone,
+    temperature: Math.min(0.9, Math.max(0.3, temperature)),
+    seed: numbers[0],
+    esoteric,
+  };
+}
 
 /**
  * Retry with exponential backoff + jitter
