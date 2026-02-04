@@ -1,5 +1,12 @@
 /**
- * Esoteric Synthesis - Combines all traditions into unified reading
+ * Esoteric Synthesis — Cosmic Tones and Unified Reading
+ *
+ * Combines polarity (yin/yang/balanced) and phase (new/waxing/full/waning)
+ * into 12 cosmic tones, each mapped to a zodiac sign with its element
+ * and modality (cardinal/fixed/mutable).
+ *
+ * The 12 tones form a complete astrological wheel:
+ *   3 polarities × 4 phases = 12 = 4 elements × 3 modalities
  */
 
 export interface SynthesisReading {
@@ -9,21 +16,100 @@ export interface SynthesisReading {
   cosmicTone: string;
 }
 
-// Cosmic tone lookup - compact format
-const TONES: Record<string, string> = {
-  "yin-new": "Deep stillness - time for rest and inner reflection",
-  "yin-waxing": "Gentle emergence - nurturing growth with patience",
-  "yin-full": "Receptive abundance - open to receiving blessings",
-  "yin-waning": "Releasing attachment - letting go with grace",
-  "yang-new": "Seed of action - preparing for bold initiatives",
-  "yang-waxing": "Rising power - building momentum toward goals",
-  "yang-full": "Peak expression - maximum creative force",
-  "yang-waning": "Harvesting results - completing and consolidating",
-  "balanced-new": "Perfect potential - all possibilities open",
-  "balanced-waxing": "Harmonious growth - balanced development",
-  "balanced-full": "Complete integration - mind, body, spirit aligned",
-  "balanced-waning": "Graceful transition - smooth transformation",
-};
+export interface CosmicTone {
+  description: string;
+  zodiacSign: string;
+  element: "Fire" | "Water" | "Air" | "Earth";
+  modality: "Cardinal" | "Fixed" | "Mutable";
+}
+
+/**
+ * 12 cosmic tones mapped to the zodiacal wheel.
+ *
+ * Mapping rationale:
+ *   - yang polarities → Fire signs (active, initiating, expressive)
+ *   - yin polarities → Water/Earth signs (receptive, nurturing, grounding)
+ *   - balanced polarities → Air signs + Scorpio (integrative, mediating)
+ *   - "new" phase → Cardinal modality (initiation) for yang/yin,
+ *     Cardinal for balanced
+ *   - "waxing" phase → Fixed modality (building, stabilizing)
+ *   - "full" phase → Mutable modality (peak expression, culmination)
+ *   - "waning" phase → mixed (completing, transitioning)
+ */
+export const COSMIC_TONES: Record<string, CosmicTone> = {
+  "yang-new": {
+    description: "Seed of action - preparing for bold initiatives",
+    zodiacSign: "Aries",
+    element: "Fire",
+    modality: "Cardinal",
+  },
+  "yang-waxing": {
+    description: "Rising power - building momentum toward goals",
+    zodiacSign: "Leo",
+    element: "Fire",
+    modality: "Fixed",
+  },
+  "yang-full": {
+    description: "Peak expression - maximum creative force",
+    zodiacSign: "Sagittarius",
+    element: "Fire",
+    modality: "Mutable",
+  },
+  "yang-waning": {
+    description: "Harvesting results - completing and consolidating",
+    zodiacSign: "Capricorn",
+    element: "Earth",
+    modality: "Cardinal",
+  },
+  "yin-new": {
+    description: "Deep stillness - time for rest and inner reflection",
+    zodiacSign: "Cancer",
+    element: "Water",
+    modality: "Cardinal",
+  },
+  "yin-waxing": {
+    description: "Gentle emergence - nurturing growth with patience",
+    zodiacSign: "Taurus",
+    element: "Earth",
+    modality: "Fixed",
+  },
+  "yin-full": {
+    description: "Receptive abundance - open to receiving blessings",
+    zodiacSign: "Virgo",
+    element: "Earth",
+    modality: "Mutable",
+  },
+  "yin-waning": {
+    description: "Releasing attachment - letting go with grace",
+    zodiacSign: "Pisces",
+    element: "Water",
+    modality: "Mutable",
+  },
+  "balanced-new": {
+    description: "Perfect potential - all possibilities open",
+    zodiacSign: "Libra",
+    element: "Air",
+    modality: "Cardinal",
+  },
+  "balanced-waxing": {
+    description: "Harmonious growth - balanced development",
+    zodiacSign: "Aquarius",
+    element: "Air",
+    modality: "Fixed",
+  },
+  "balanced-full": {
+    description: "Complete integration - mind, body, spirit aligned",
+    zodiacSign: "Gemini",
+    element: "Air",
+    modality: "Mutable",
+  },
+  "balanced-waning": {
+    description: "Graceful transition - smooth transformation",
+    zodiacSign: "Scorpio",
+    element: "Water",
+    modality: "Fixed",
+  },
+} as const;
 
 /**
  * Calculate synthesis from quantum bytes
@@ -47,7 +133,9 @@ export function calculateSynthesis(bytes: number[]): SynthesisReading {
     energy < 0.75 ? "full" :
     "waning";
 
-  const cosmicTone = TONES[`${polarity}-${phase}`];
+  const toneKey = `${polarity}-${phase}`;
+  const tone = COSMIC_TONES[toneKey];
+  const cosmicTone = tone?.description ?? "Unknown resonance";
 
   return { energy, polarity, phase, cosmicTone };
 }

@@ -1,32 +1,254 @@
 /**
- * Kabbalah - 10 Sefirot (Tree of Life)
- * Compact format: [name, hebrew, meaning, attribute]
+ * Kabbalah — 10 Sefirot (Arbre de Vie / Tree of Life)
+ *
+ * Enriched data with divine names, archangels, planetary correspondences,
+ * colors, elements, pillar/world positions, and deep descriptions (200+ words).
+ * Correspondences follow the Golden Dawn tradition (Mathers, Regardie).
+ * Content in French for the Quantum Oracle application.
  */
 
-export interface Sefirah {
-  name: string;
-  hebrew: string;
-  meaning: string;
-  attribute: string;
-}
+import type { Sefirah } from "./types";
 
-// [name, hebrew, meaning, attribute]
-const S: [string, string, string, string][] = [
-  ["Keter", "כתר", "Crown - Divine will, the source of all", "Supreme consciousness"],
-  ["Chokmah", "חכמה", "Wisdom - Divine wisdom, first flash of insight", "Inspiration"],
-  ["Binah", "בינה", "Understanding - Divine understanding, analytical thought", "Comprehension"],
-  ["Chesed", "חסד", "Mercy - Loving kindness, benevolence", "Love and grace"],
-  ["Gevurah", "גבורה", "Strength - Divine judgment, discipline", "Power and restraint"],
-  ["Tiferet", "תפארת", "Beauty - Harmony, compassion, balance", "Harmony"],
-  ["Netzach", "נצח", "Victory - Endurance, ambition", "Eternity"],
-  ["Hod", "הוד", "Splendor - Glory, humility, sincerity", "Majesty"],
-  ["Yesod", "יסוד", "Foundation - Connection, bonding", "Foundation"],
-  ["Malkuth", "מלכות", "Kingdom - Physical reality, manifestation", "Sovereignty"],
-];
+// =============================================================================
+// 10 SEFIROT — number 1-10, Golden Dawn tradition
+// =============================================================================
 
-export const SEFIROT: Record<number, Sefirah> = Object.fromEntries(
-  S.map(([name, hebrew, meaning, attribute], i) => [
-    i + 1,
-    { name, hebrew, meaning, attribute },
-  ])
-);
+export const SEFIROT: Record<number, Sefirah> = {
+  1: {
+    number: 1,
+    name: "Kether",
+    hebrew: "\u05DB\u05EA\u05E8",
+    meaning: "Couronne — Volonte divine, source de toute emanation",
+    attribute: "Conscience supreme, unite absolue",
+    divineName: "Eheieh (\u05D0\u05D4\u05D9\u05D4 — Je Suis)",
+    archangel: "Metatron",
+    planet: "Rashith ha-Gilgalim (Premier Mobile)",
+    color: "Blanc brillant",
+    element: "Esprit",
+    description:
+      "Kether est la premiere emanation de l'Ain Soph Aur (Lumiere Infinie), le point primordial ou l'Inconnaissable commence a se manifester. Situee au sommet du Pilier du Milieu, dans le monde d'Atziluth (Emanation), elle represente la volonte divine pure avant toute differentiation. C'est le Yod primordial, la graine de lumiere qui contient en puissance la totalite de la creation sans encore la deployer. Le nom divin Eheieh (« Je Suis ») exprime l'etre pur, l'existence qui se suffit a elle-meme, au-dela de toute qualification. Metatron, l'Ange de la Presence, est le gardien de ce seuil ou le fini touche l'infini. Kether transcende les quatre elements et les sept planetes — elle est le point d'ou tout rayonne et ou tout converge. Dans l'experience mystique, l'atteinte de Kether correspond a l'union extatique (devekout) ou la conscience individuelle se dissout dans l'ocean de la Lumiere divine. Le Zohar la compare a la pointe superieure du Yod dans le Tetragramme YHVH, le mouvement imperceptible qui precede toute manifestation. Le mystique qui contemple Kether ne peut en rapporter que le silence, car elle est au-dela de toute parole et de toute pensee. C'est la racine de l'Arbre dont toutes les Sefirot sont les branches — la source unique dont les dix lumieres sont les reflets.",
+    correspondences: {
+      pillar: "Milieu (Equilibre)",
+      world: "Atziluth (Emanation)",
+      tarotArcana: "Les 4 As des arcanes mineures",
+      bodyPart: "Crane, au-dessus de la tete (aura)",
+      virtue: "Accomplissement du Grand OEuvre",
+      vice: "Neant (aucun vice ne peut exister a ce niveau)",
+      experience: "Union avec Dieu",
+    },
+  },
+  2: {
+    number: 2,
+    name: "Chokmah",
+    hebrew: "\u05D7\u05DB\u05DE\u05D4",
+    meaning: "Sagesse — Premiere impulsion creatrice, eclair d'intuition",
+    attribute: "Sagesse divine, force active primordiale",
+    divineName: "Yah (\u05D9\u05D4)",
+    archangel: "Raziel",
+    planet: "Mazloth (Zodiaque)",
+    color: "Gris",
+    element: "Feu",
+    description:
+      "Chokmah est la deuxieme emanation, la Sagesse divine qui jaillit de Kether comme un eclair fulgurant. Situee au sommet du Pilier de la Misericorde (droite), dans le monde de Briah (Creation), elle represente la force masculine primordiale, le Yod du Tetragramme, la semence cosmique qui feconde l'univers. C'est le premier He du nom divin deploye dans l'espace — le mouvement pur, l'elan createur avant que la forme ne le contienne. Le nom divin Yah (les deux premieres lettres de YHVH) exprime cette impulsion originelle, cette sagesse qui n'est pas encore comprehension mais pure vision. Raziel (« Secret de Dieu ») est l'archange qui revele les mysteres caches — la tradition veut qu'il ait transmis a Adam le Sefer Raziel, le livre de toute la sagesse celeste. Chokmah correspond au Zodiaque tout entier (Mazloth), car elle contient en germe les douze energies archetype avant leur differenciation. Dans l'ame humaine, elle est le flash d'intuition pure, la vision qui precede l'analyse, le moment ou la verite apparait entiere avant que le mental ne la decompose. Le Zohar la decrit comme la « pensee » de Dieu, un ocean de lumiere dont chaque goutte contient un univers. Comme le pere celeste, elle engendre sans effort, par le simple debordement de sa plenitude. L'unite de Kether se polarise en Chokmah, et c'est cette premiere polarisation qui rend possible toute la creation.",
+    correspondences: {
+      pillar: "Droite (Misericorde)",
+      world: "Briah (Creation)",
+      tarotArcana: "Les 4 Deux des arcanes mineures",
+      bodyPart: "Hemisphere cerebral gauche",
+      virtue: "Devotion",
+      vice: "Neant (au-dessus du bien et du mal)",
+      experience: "Vision de Dieu face a face",
+    },
+  },
+  3: {
+    number: 3,
+    name: "Binah",
+    hebrew: "\u05D1\u05D9\u05E0\u05D4",
+    meaning: "Intelligence — Comprehension divine, pensee analytique, forme",
+    attribute: "Comprehension, receptivite, matrice cosmique",
+    divineName: "YHVH Elohim (\u05D9\u05D4\u05D5\u05D4 \u05D0\u05DC\u05D4\u05D9\u05DD)",
+    archangel: "Tzaphkiel",
+    planet: "Shabbathai (Saturne)",
+    color: "Noir",
+    element: "Eau",
+    description:
+      "Binah est la troisieme emanation, l'Intelligence divine qui recoit l'eclair de Chokmah et lui donne forme. Situee au sommet du Pilier de la Rigueur (gauche), dans le monde de Briah (Creation), elle represente le principe feminin primordial, la Grande Mere (Aima) qui concoit et enfante l'univers manifeste. C'est le premier He du Tetragramme — le receptacle, le ventre cosmique, la matrice ou la force brute de Chokmah se condense en structure. Le nom divin YHVH Elohim unit le Tetragramme a la puissance creatrice plurielle (Elohim), signifiant que c'est ici que l'unite commence a se deployer en multiplicite. Saturne (Shabbathai), son astre, incarne le temps, la limitation et la forme — les conditions necessaires pour que l'infini se manifeste dans le fini. Tzaphkiel (« Contemplation de Dieu ») veille sur ce mystere de la contraction. Binah est aussi Marah, la Grande Mer (les memes lettres en hebreu), l'ocean primordial d'ou emergent toutes les formes de vie. Sa couleur noire n'est pas l'absence de lumiere mais la plenitude qui absorbe toute lumiere — comme le ventre maternel ou la vie germe dans l'obscurite. Dans l'ame humaine, Binah est la capacite de comprendre par l'analyse, de distinguer les parties dans le tout, de donner sens a la vision de Chokmah. Le deuil et la compassion sont aussi les siennes, car toute forme nait avec en elle la semence de sa dissolution. Binah et Chokmah sont les deux colonnes du temple cosmique, inseparables et complementaires.",
+    correspondences: {
+      pillar: "Gauche (Rigueur)",
+      world: "Briah (Creation)",
+      tarotArcana: "Les 4 Trois des arcanes mineures",
+      bodyPart: "Hemisphere cerebral droit",
+      virtue: "Silence",
+      vice: "Avarice",
+      experience: "Vision de la douleur",
+    },
+  },
+  4: {
+    number: 4,
+    name: "Chesed",
+    hebrew: "\u05D7\u05E1\u05D3",
+    meaning: "Grace — Misericorde, amour inconditionnel, expansion",
+    attribute: "Amour, bonte, benevolence, abondance",
+    divineName: "El (\u05D0\u05DC)",
+    archangel: "Tzadkiel",
+    planet: "Tzedek (Jupiter)",
+    color: "Bleu",
+    element: "Eau",
+    description:
+      "Chesed est la quatrieme emanation, la premiere Sefirah sous l'Abime (le gouffre qui separe le triangle supernal du reste de l'Arbre). Situee sur le Pilier de la Misericorde dans le monde de Yetzirah (Formation), elle represente l'amour divin en acte — la grace qui se repand sans condition, la misericorde qui deborde comme un fleuve. Le nom divin El (« Dieu ») dans sa forme la plus simple et la plus directe exprime cette bonte premiere. Jupiter (Tzedek, « Justice » au sens de justesse cosmique) est son astre — la planete de l'expansion, de la prosperite et de la magnanimite royale. Tzadkiel (« Justice de Dieu ») est l'archange de la clemence, celui qui retint le bras d'Abraham sur le mont Moriah. Chesed est le roi bienveillant assis sur son trone, dispensant ses bienfaits a tous sans discrimination. C'est la premiere manifestation de l'amour au-dessous de l'Abime, le premier visage de Dieu que l'ame peut contempler sans etre aneantie. Sa couleur bleue est celle du ciel ouvert, de l'ocean de grace, de la profondeur sans limite de la compassion divine. Dans la psyche humaine, Chesed gouverne la generosite, l'ambition noble, le desir de construire et d'organiser au service du bien commun. Le patriarche Abraham incarne cette Sefirah dans la tradition. Cependant, sans le contrepoids de Gevurah, la bonte de Chesed deviendrait exces — une indulgence qui detruit par manque de discernement. L'equilibre de l'Arbre exige que la misericorde soit temperee par la rigueur.",
+    correspondences: {
+      pillar: "Droite (Misericorde)",
+      world: "Yetzirah (Formation)",
+      tarotArcana: "Les 4 Quatre des arcanes mineures",
+      bodyPart: "Bras droit, epaule droite",
+      virtue: "Obeissance",
+      vice: "Bigoterie, hypocrisie, gloutonnerie",
+      experience: "Vision de l'amour",
+      patriarch: "Abraham",
+    },
+  },
+  5: {
+    number: 5,
+    name: "Gevurah",
+    hebrew: "\u05D2\u05D1\u05D5\u05E8\u05D4",
+    meaning: "Force — Jugement divin, discipline, puissance de restriction",
+    attribute: "Puissance, jugement, rigueur, discernement",
+    divineName: "Elohim Gibor (\u05D0\u05DC\u05D4\u05D9\u05DD \u05D2\u05D1\u05D5\u05E8)",
+    archangel: "Khamael",
+    planet: "Madim (Mars)",
+    color: "Rouge",
+    element: "Feu",
+    description:
+      "Gevurah est la cinquieme emanation, la puissance de restriction et de jugement qui contrebalance l'expansion illimitee de Chesed. Situee sur le Pilier de la Rigueur dans le monde de Yetzirah, elle represente la main gauche de Dieu — celle qui tranche, separe, juge et purifie. Sans Gevurah, la creation se dissoudrait dans l'indifferenciation de la bonte sans limites ; c'est elle qui donne forme en imposant des frontieres. Le nom divin Elohim Gibor (« Dieu le Puissant ») exprime cette force terrible et necessaire. Mars (Madim, « le Rouge ») est son astre — la planete du guerrier, de l'energie combative et de la severite. Khamael (« Rigueur de Dieu ») est l'archange qui execute les decrets de justice divine avec une precision chirurgicale. Le rouge de Gevurah est celui du sang et du feu — la purification par l'epreuve, la forge ou le metal brut est battu jusqu'a devenir lame. Le patriarche Isaac, lie sur l'autel du sacrifice, incarne le consentement a cette rigueur necessaire. Dans la psyche humaine, Gevurah gouverne le courage, la discipline personnelle, la capacite de dire non, de poser des limites et de defendre ce qui est juste meme au prix du conflit. C'est aussi la source de la peur sacree (Yirat Hashem), la crainte reverencielle devant la puissance du divin. Le Zohar enseigne que Gevurah est le feu qui consume les impuretes — non pas pour detruire, mais pour reveler l'or cache sous la gangue. L'abus de Gevurah sans la temperance de Chesed produit la cruaute, la tyrannie et la destruction gratuite.",
+    correspondences: {
+      pillar: "Gauche (Rigueur)",
+      world: "Yetzirah (Formation)",
+      tarotArcana: "Les 4 Cinq des arcanes mineures",
+      bodyPart: "Bras gauche, epaule gauche",
+      virtue: "Energie, courage",
+      vice: "Cruaute, destruction",
+      experience: "Vision de la puissance",
+      patriarch: "Isaac",
+    },
+  },
+  6: {
+    number: 6,
+    name: "Tiphereth",
+    hebrew: "\u05EA\u05E4\u05D0\u05E8\u05EA",
+    meaning: "Beaute — Harmonie, compassion, centre du coeur de l'Arbre",
+    attribute: "Harmonie, equilibre, beaute, compassion",
+    divineName: "YHVH Eloah VeDaath (\u05D9\u05D4\u05D5\u05D4 \u05D0\u05DC\u05D5\u05D4 \u05D5\u05D3\u05E2\u05EA)",
+    archangel: "Raphael",
+    planet: "Shemesh (Soleil)",
+    color: "Jaune dore",
+    element: "Air",
+    description:
+      "Tiphereth est la sixieme emanation et le coeur de l'Arbre de Vie. Situee au centre exact du Pilier du Milieu, dans le monde de Yetzirah, elle est le point de convergence ou toutes les forces opposees se reconcilent dans la beaute. Le Soleil (Shemesh) est son astre — l'etoile qui illumine tout le systeme, source de vie, de chaleur et de clarte. Le nom divin YHVH Eloah VeDaath (« Dieu de la Connaissance ») unit le Tetragramme sacre a la connaissance experimentale du divin. Raphael (« Guerison de Dieu ») est l'archange guerisseur, car c'est dans l'harmonie de Tiphereth que les blessures de l'ame trouvent leur remede. Tiphereth recoit directement de Kether par le sentier de Gimel (La Papesse) et redistribue la lumiere vers toutes les Sefirot inferieures — elle est le mediateur entre le Haut et le Bas, le transformateur qui traduit l'absolu en comprehensible. Le patriarche Jacob, qui lutta avec l'ange et vit Dieu face a face, incarne cette Sefirah. Dans la psyche humaine, Tiphereth est le Soi (le Self jungien), le centre d'integration de la personnalite ou le moi inferieur rencontre le Soi superieur. C'est le siege de la devotion, de l'amour sacrificiel, du sens du sacre. Sa couleur jaune doree est celle du soleil au zenith — la verite nue qui ne projette aucune ombre. La beaute de Tiphereth n'est pas esthetique mais ontologique : c'est la justesse parfaite de chaque chose a sa place, l'harmonie qui nait quand la misericorde et la rigueur s'equilibrent. Tous les grands mysteres de redemption et de sacrifice trouvent leur expression en Tiphereth.",
+    correspondences: {
+      pillar: "Milieu (Equilibre)",
+      world: "Yetzirah (Formation)",
+      tarotArcana: "Les 4 Six des arcanes mineures",
+      bodyPart: "Coeur, poitrine",
+      virtue: "Devotion au Grand OEuvre",
+      vice: "Orgueil",
+      experience: "Vision de l'harmonie des choses",
+      patriarch: "Jacob",
+    },
+  },
+  7: {
+    number: 7,
+    name: "Netzach",
+    hebrew: "\u05E0\u05E6\u05D7",
+    meaning: "Victoire — Endurance, desir, emotion, force vitale",
+    attribute: "Eternite, desir, emotion creatrice",
+    divineName: "YHVH Tzabaoth (\u05D9\u05D4\u05D5\u05D4 \u05E6\u05D1\u05D0\u05D5\u05EA)",
+    archangel: "Haniel",
+    planet: "Nogah (Venus)",
+    color: "Vert emeraude",
+    element: "Feu",
+    description:
+      "Netzach est la septieme emanation, la force d'endurance et de victoire qui pulse dans tout ce qui vit. Situee sur le Pilier de la Misericorde dans la partie basse de l'Arbre (monde de Yetzirah), elle represente l'energie emotionnelle, le desir, la passion et la pulsion creatrice qui anime la nature. Venus (Nogah, « Splendeur ») est son astre — la planete de l'amour, de la beaute sensible et de l'art. Le nom divin YHVH Tzabaoth (« Dieu des Armees ») peut sembler paradoxal pour Venus, mais il exprime la force irresistible de la nature qui triomphe de toute resistance par la patience et la repetition — les armees ici sont les legions de forces naturelles qui ne cessent jamais. Haniel (« Grace de Dieu ») est l'archange de cette grace naturelle qui s'exprime dans la beaute d'une fleur, l'attrait entre les etres, l'elan de l'artiste vers son oeuvre. Moise incarne cette Sefirah dans la tradition, lui qui persevera quarante annees dans le desert. Dans la psyche humaine, Netzach gouverne les emotions, les instincts, l'imagination creatrice, la capacite d'etre mu et emu, le feu interieur qui pousse a creer, aimer et perseverer. Sa couleur verte est celle de la vegetation luxuriante, de la vie qui repousse apres chaque hiver, de l'esperance indestructible. Netzach forme avec Hod le couple des Sefirot pratiques — Netzach etant le pole emotionnel-intuitif et Hod le pole intellectuel-analytique. Sans le contrepoids de Hod, Netzach sombre dans la sensiblerie, l'obsession ou la debauche.",
+    correspondences: {
+      pillar: "Droite (Misericorde)",
+      world: "Yetzirah (Formation)",
+      tarotArcana: "Les 4 Sept des arcanes mineures",
+      bodyPart: "Hanche droite, jambe droite",
+      virtue: "Altruisme",
+      vice: "Luxure, impudeur",
+      experience: "Vision de beaute triomphante",
+      patriarch: "Moise",
+    },
+  },
+  8: {
+    number: 8,
+    name: "Hod",
+    hebrew: "\u05D4\u05D5\u05D3",
+    meaning: "Splendeur — Gloire, intellect, communication, forme de la pensee",
+    attribute: "Gloire, intellect, communication, rationalite",
+    divineName: "Elohim Tzabaoth (\u05D0\u05DC\u05D4\u05D9\u05DD \u05E6\u05D1\u05D0\u05D5\u05EA)",
+    archangel: "Michael",
+    planet: "Kokab (Mercure)",
+    color: "Orange",
+    element: "Eau",
+    description:
+      "Hod est la huitieme emanation, la Splendeur de l'intellect qui donne forme et structure aux energies de Netzach. Situee sur le Pilier de la Rigueur dans la partie basse de l'Arbre (monde de Yetzirah), elle represente le mental analytique, la communication, le langage, les systemes symboliques et la magie ceremonielle. Mercure (Kokab, « Etoile ») est son astre — la planete de l'intelligence rapide, de l'ecriture, du commerce et de la medecine. Le nom divin Elohim Tzabaoth (« Dieu des Armees » sous la forme Elohim) exprime la puissance organisatrice de l'intellect divin qui ordonne les forces naturelles en systemes comprehensibles. Michael (« Qui est comme Dieu ? ») est l'archange guerrier de la verite, celui qui terrasse le mensonge par la lumiere de la raison. Le patriarche Aaron, pretre et porte-parole, incarne cette Sefirah dans la tradition. Dans la psyche humaine, Hod gouverne la pensee rationnelle, la capacite d'analyser, de communiquer, de formuler des rituels et des prieres, de manipuler les symboles et les nombres. Sa couleur orange exprime l'eclat de l'intellect illumine par la chaleur de la comprehension. C'est le siege de la magie ceremonielle (theurgique), car le mage travaille avec des symboles, des mots de pouvoir et des formules qui sont du domaine de Hod. Hod est aussi le domaine de l'humilite intellectuelle — la reconnaissance que le mental, aussi brillant soit-il, ne peut saisir la totalite du reel. Sans le contrepoids emotionnel de Netzach, Hod produit l'aridite intellectuelle, le scepticisme sterile et la manipulation cynique.",
+    correspondences: {
+      pillar: "Gauche (Rigueur)",
+      world: "Yetzirah (Formation)",
+      tarotArcana: "Les 4 Huit des arcanes mineures",
+      bodyPart: "Hanche gauche, jambe gauche",
+      virtue: "Sincerite",
+      vice: "Malhonnetete",
+      experience: "Vision de splendeur",
+      patriarch: "Aaron",
+    },
+  },
+  9: {
+    number: 9,
+    name: "Yesod",
+    hebrew: "\u05D9\u05E1\u05D5\u05D3",
+    meaning: "Fondation — Lien entre les mondes, imagination, inconscient",
+    attribute: "Fondation, lien, imagination creatrice",
+    divineName: "Shaddai El Chai (\u05E9\u05D3\u05D9 \u05D0\u05DC \u05D7\u05D9)",
+    archangel: "Gabriel",
+    planet: "Levanah (Lune)",
+    color: "Violet",
+    element: "Air",
+    description:
+      "Yesod est la neuvieme emanation, la Fondation sur laquelle repose tout l'edifice de la creation manifestee. Situee sur le Pilier du Milieu juste au-dessus de Malkuth, elle est le dernier relais entre le monde spirituel et le monde physique, le prisme qui recoit toutes les lumieres de l'Arbre et les projette en Malkuth. La Lune (Levanah) est son astre — l'astre qui ne brille pas de sa propre lumiere mais reflete celle du Soleil (Tiphereth), comme Yesod transmet a la matiere les energies de toutes les Sefirot superieures. Le nom divin Shaddai El Chai (« Dieu Tout-Puissant Vivant ») exprime la force vitale qui anime la matiere, le souffle de vie insufle dans la glaise. Gabriel (« Force de Dieu ») est l'archange de l'Annonciation, le messager qui transmet les decrets divins au plan terrestre — c'est lui qui apparait dans les reves et les visions. Joseph le Juste incarne cette Sefirah dans la tradition — l'interpreteur de reves par excellence. Dans la psyche humaine, Yesod est l'inconscient, le reve, l'imagination, la memoire, le plan astral ou les formes-pensees prennent corps avant de se materialiser. Sa couleur violette evoque le crepuscule entre le jour et la nuit, le seuil entre le monde eveille et le monde onirique. Yesod est aussi le siege de la vitalite sexuelle et reproductive — la force de generation qui perpetue la creation dans le monde physique. C'est par Yesod que transitent toutes les pratiques divinatoires, car la divination opere dans le plan intermediaire entre l'esprit et la matiere. Le QRNG du Quantum Oracle touche ce plan ou le signal quantique — ni tout a fait matiere, ni tout a fait information — s'effondre en structure signifiante.",
+    correspondences: {
+      pillar: "Milieu (Equilibre)",
+      world: "Yetzirah (Formation)",
+      tarotArcana: "Les 4 Neuf des arcanes mineures",
+      bodyPart: "Organes reproducteurs",
+      virtue: "Independance",
+      vice: "Paresse",
+      experience: "Vision du mecanisme de l'univers",
+      patriarch: "Joseph",
+    },
+  },
+  10: {
+    number: 10,
+    name: "Malkuth",
+    hebrew: "\u05DE\u05DC\u05DB\u05D5\u05EA",
+    meaning: "Royaume — Realite physique, manifestation, la Shekinah",
+    attribute: "Souverainete, realite physique, presence divine immanente",
+    divineName: "Adonai ha-Aretz (\u05D0\u05D3\u05E0\u05D9 \u05D4\u05D0\u05E8\u05E5)",
+    archangel: "Sandalphon",
+    planet: "Olam Yesodoth (Terre, sphere des elements)",
+    color: "Citrine, olive, brun, noir",
+    element: "Terre",
+    description:
+      "Malkuth est la dixieme et derniere emanation, le Royaume ou la totalite de la lumiere divine acheve sa descente dans la matiere. Situee au pied du Pilier du Milieu, dans le monde d'Assiah (Action), elle est la Shekinah — la Presence divine immanente dans le monde physique, l'epouse exilee qui aspire a reunir le Haut et le Bas. Le nom divin Adonai ha-Aretz (« Seigneur de la Terre ») exprime la souverainete de Dieu sur le plan materiel, le sacre cache dans le quotidien. Sandalphon, le frere jumeau de Metatron, est l'archange qui tisse les prieres des hommes en couronnes de lumiere pour Kether — il est le lien ascendant entre le Royaume terrestre et la Couronne celeste. Ses quatre couleurs (citrine, olive, brun, noir) representent les quatre elements manifestes dans la matiere, les quatre directions de l'espace et les quatre saisons. David le Roi incarne cette Sefirah dans la tradition — le berger devenu roi, le psalmiste qui chante le sacre dans le monde profane. Dans la psyche humaine, Malkuth est le corps physique, la conscience eveillees, le monde des sens et de l'experience concrete. Loin d'etre une Sefirah inferieure ou degradee, Malkuth est le but de toute la creation — le lieu ou l'esprit prend corps et ou la matiere peut etre sanctifiee. Le Zohar enseigne que Malkuth n'a pas de lumiere propre mais recoit et synthetise toutes les lumieres des Sefirot superieures, comme un prisme qui reconstitue la lumiere blanche a partir du spectre. C'est en Malkuth que le travail spirituel trouve son accomplissement — non pas dans la fuite hors du monde, mais dans la transfiguration du monde. La divination quantique s'ancre en Malkuth : les bits physiques issus du QRNG sont la matiere brute (prima materia) que le moteur esoterique transmute en or spirituel.",
+    correspondences: {
+      pillar: "Milieu (Equilibre)",
+      world: "Assiah (Action)",
+      tarotArcana: "Les 4 Dix des arcanes mineures",
+      bodyPart: "Pieds, corps physique entier",
+      virtue: "Discrimination",
+      vice: "Avarice, inertie",
+      experience: "Connaissance et conversation avec le Saint Ange Gardien",
+      patriarch: "David",
+    },
+  },
+};

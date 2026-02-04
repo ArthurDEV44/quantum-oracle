@@ -29,11 +29,10 @@ import {
   calculateElements,
   calculateSacredGeometry,
   calculateSynthesis,
-  // Types
-  type Trigram,
-  type Element,
-  type ElementBalance,
 } from "@/data/esoteric";
+// Enriched types from data files (re-exported from types.ts)
+import type { Trigram } from "@/data/esoteric/iching";
+import type { Element, ElementBalance } from "@/data/esoteric/elements";
 
 // =============================================================================
 // TYPES
@@ -59,7 +58,7 @@ export interface QuantumEsotericReading {
     arcanaName: string;
     arcanaSymbol: string;
     meaning: string;
-    keywords: string[];
+    keywords: readonly string[];
   };
   kabbalah: {
     sefirahNumber: number;
