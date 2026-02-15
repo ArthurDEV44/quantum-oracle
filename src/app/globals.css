@@ -1,58 +1,125 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: #fdfcfb;
-  --foreground: #1a1a1a;
-  --accent: #a855f7;
-  --accent-warm: #f97316;
-  --muted: #64748b;
-  --border: rgba(0, 0, 0, 0.08);
+  /* Dark mode premium palette — Cosmos.so inspired */
+  --background: #0C0C0C;
+  --foreground: #E6E5E0;
+  --text-secondary: #A49B8B;
+  --text-tertiary: #8A857E;
+  --accent: #D4A574;
+  --accent-violet: #7C3AED;
+  --accent-foreground: #E6E5E0;
+
+  /* Dark surfaces */
+  --card: #161618;
+  --card-elevated: #1C1C1F;
+  --card-foreground: #E6E5E0;
+  --card-bg: #161618;
+  --card-radius: 20px;
+  --card-border: rgba(255, 255, 255, 0.06);
+  --surface-secondary: #111113;
+  --surface-tertiary: #1A1A1D;
+
+  /* Dark mode shadows */
+  --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
+  --card-shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  --glow-gold: 0 0 40px rgba(212, 165, 116, 0.15);
+  --glow-violet: 0 0 40px rgba(124, 58, 237, 0.15);
+
+  /* Gradient palette — warm gold + violet */
+  --gradient-primary: linear-gradient(135deg, #D4A574 0%, #C9A87C 50%, #A49B8B 100%);
+  --gradient-cta: linear-gradient(135deg, #4338CA 0%, #6D28D9 50%, #7C3AED 100%);
+  --gradient-esoteric: linear-gradient(135deg, #D4A574 0%, #7C3AED 100%);
+  --gradient-surface: linear-gradient(180deg, rgba(124, 58, 237, 0.03) 0%, transparent 50%);
+
+  /* CossUI semantic tokens — dark mode */
+  --border: rgba(255, 255, 255, 0.06);
+  --muted: rgba(255, 255, 255, 0.04);
+  --muted-foreground: #8A857E;
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: #7C3AED;
+  --primary: #E6E5E0;
+  --primary-foreground: #0C0C0C;
+  --secondary: rgba(255, 255, 255, 0.04);
+  --secondary-foreground: #E6E5E0;
+  --popover: #1C1C1F;
+  --popover-foreground: #E6E5E0;
+  --destructive: #ef4444;
+  --destructive-foreground: #fca5a5;
+  --info: #3b82f6;
+  --info-foreground: #93c5fd;
+  --success: #10b981;
+  --success-foreground: #6ee7b7;
+  --warning: #f59e0b;
+  --warning-foreground: #fcd34d;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
   --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);
-  --font-sans: var(--font-geist-sans);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-input: var(--input);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --radius-2xl: 20px;
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
+  --font-sans: var(--font-body);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-heading);
+  --animate-skeleton: skeleton 2s -1s infinite linear;
+  @keyframes skeleton {
+    to {
+      background-position: -200% 0;
+    }
+  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
-  letter-spacing: -0.01em;
+  font-family: var(--font-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1, 'liga' 1;
 }
 
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Heading typography — Instrument Serif italic */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading), Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 0.9;
 }
 
-@keyframes subtle-pulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.6; }
-}
-
-.animate-fade-in {
-  animation: fade-in 1s ease-out forwards;
-}
-
-.animate-subtle-pulse {
-  animation: subtle-pulse 4s ease-in-out infinite;
-}
-
-.border-subtle {
-  border: 1px solid var(--border);
-}
-
-/* Hero staggered entrance */
+/* Hero staggered entrance — Apple spring easing */
 @keyframes hero-enter {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -62,54 +129,87 @@ body {
 
 .hero-enter {
   opacity: 0;
-  animation: hero-enter 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  animation: hero-enter 0.8s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
 }
 
-.hero-delay-1 { animation-delay: 0.1s; }
-.hero-delay-2 { animation-delay: 0.2s; }
-.hero-delay-3 { animation-delay: 0.35s; }
-.hero-delay-4 { animation-delay: 0.5s; }
-.hero-delay-5 { animation-delay: 0.65s; }
-.hero-delay-6 { animation-delay: 0.8s; }
+.hero-delay-1 { animation-delay: 0.05s; }
+.hero-delay-2 { animation-delay: 0.15s; }
+.hero-delay-3 { animation-delay: 0.3s; }
+.hero-delay-4 { animation-delay: 0.45s; }
+.hero-delay-5 { animation-delay: 0.55s; }
+.hero-delay-6 { animation-delay: 0.7s; }
 
-@media (prefers-reduced-motion: reduce) {
-  .hero-enter {
-    animation: none;
-    opacity: 1;
-  }
+/* Gradient text utility — gold to violet */
+.text-gradient {
+  background: var(--gradient-esoteric);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-/* Warm mesh gradient background */
+/* Ambient background — subtle radials on dark */
 .mesh-gradient {
   position: fixed;
   inset: 0;
   pointer-events: none;
   z-index: 0;
   background:
-    radial-gradient(ellipse 60% 50% at 10% 5%, hsla(28, 100%, 72%, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 40% at 85% 0%, hsla(270, 76%, 65%, 0.10) 0%, transparent 50%),
-    radial-gradient(ellipse 40% 50% at 50% 35%, hsla(45, 100%, 76%, 0.06) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 40% at 95% 50%, hsla(220, 85%, 62%, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 50% at 5% 90%, hsla(160, 65%, 55%, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse 60% 40% at 70% 95%, hsla(280, 70%, 60%, 0.06) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124, 58, 237, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 60%, rgba(212, 165, 116, 0.04) 0%, transparent 50%),
+    radial-gradient(ellipse 60% 40% at 10% 80%, rgba(124, 58, 237, 0.03) 0%, transparent 50%);
 }
 
-.film-grain {
-  position: fixed;
-  inset: 0;
-  background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-  opacity: 0.01;
-  pointer-events: none;
-  z-index: 50;
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero-enter {
+    animation: none;
+    opacity: 1;
+  }
+
+  * {
+    transition-duration: 0.01ms !important;
+  }
 }
 
-.volumetric-rays {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 50% -20%, hsla(28, 100%, 72%, 0.04) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 1;
+/* Selection color — violet on dark */
+::selection {
+  background: rgba(124, 58, 237, 0.25);
+}
+
+/* CossUI dark class — mirrors :root (dark-only site) */
+.dark {
+  --accent: #D4A574;
+  --accent-foreground: #E6E5E0;
+  --background: #0C0C0C;
+  --border: rgba(255, 255, 255, 0.06);
+  --card: #161618;
+  --card-foreground: #E6E5E0;
+  --destructive: #ef4444;
+  --destructive-foreground: #fca5a5;
+  --foreground: #E6E5E0;
+  --info: #3b82f6;
+  --info-foreground: #93c5fd;
+  --input: rgba(255, 255, 255, 0.08);
+  --muted: rgba(255, 255, 255, 0.04);
+  --muted-foreground: #8A857E;
+  --popover: #1C1C1F;
+  --popover-foreground: #E6E5E0;
+  --primary: #E6E5E0;
+  --primary-foreground: #0C0C0C;
+  --ring: #7C3AED;
+  --secondary: rgba(255, 255, 255, 0.04);
+  --secondary-foreground: #E6E5E0;
+  --success: #10b981;
+  --success-foreground: #6ee7b7;
+  --warning: #f59e0b;
+  --warning-foreground: #fcd34d;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }

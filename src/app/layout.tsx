@@ -1,12 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Instrument_Serif, Inter, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Navbar, Footer } from "@/components";
+import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-heading",
   subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
+  display: "swap",
+});
+
+const inter = Inter({
+  variable: "--font-body",
+  subsets: ["latin"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({
@@ -35,7 +45,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#0C0C0C",
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
@@ -49,15 +59,20 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="fr">
+      <html lang="fr" className="dark">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-slate-50 text-slate-900 min-h-screen flex flex-col`}
-        >          
-          <Navbar />
-          
-          <main className="relative z-10 pt-20 flex-1">{children}</main>
+          className={`${instrumentSerif.variable} ${inter.variable} ${geistMono.variable} bg-[#0C0C0C] text-[#E6E5E0] antialiased min-h-screen flex flex-col`}
+          style={{ position: "relative" }}
+        >
+          <ToastProvider position="bottom-right">
+            <div style={{ isolation: "isolate" }}>
+              <Navbar />
 
-          <Footer />
+              <main className="relative z-10 pt-20 flex-1">{children}</main>
+
+              <Footer />
+            </div>
+          </ToastProvider>
         </body>
       </html>
     </ClerkProvider>

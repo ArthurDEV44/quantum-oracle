@@ -1,87 +1,28 @@
-/**
- * Simple/Intuitive Explanation View
- */
+import { Card, CardPanel } from "@/components/ui/card";
 
-import { STEPS, KEY_POINTS } from "./constants";
-
-const STEP_ACCENTS = [
-  "border-orange-200/60 text-orange-500",
-  "border-violet-200/60 text-violet-500",
-  "border-blue-200/60 text-blue-500",
-  "border-emerald-200/60 text-emerald-500",
+const STEPS = [
+  { num: "01", title: "Posez votre question", desc: "Formulez votre intention. Chaque mot oriente les flux quantiques vers une réponse unique." },
+  { num: "02", title: "Génération quantique", desc: "Des octets de hasard pur sont extraits du bruit fondamental de l'univers via des sources certifiées." },
+  { num: "03", title: "Lecture multi-traditions", desc: "L'IA interprète le signal à travers 6 traditions ésotériques millénaires pour révéler votre guidance." },
 ];
 
 export function SimpleExplanation() {
   return (
-    <div className="space-y-20">
-      {/* Flow Diagram */}
-      <div className="border border-slate-100 rounded-2xl p-8 md:p-14 bg-white/40 backdrop-blur-sm">
-        <h3 className="text-[11px] tracking-[0.3em] uppercase text-slate-500 font-mono mb-12 text-center">
-          Le Voyage d&apos;une Consultation
-        </h3>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+      {/* Connecting line — desktop only */}
+      <div className="hidden md:block absolute top-16 left-[16%] right-[16%] h-px bg-gradient-to-r from-[#D4A574]/20 via-[#7C3AED]/20 to-[#D4A574]/20" aria-hidden="true" />
 
-        <div className="relative">
-          {/* Connecting line - desktop */}
-          <div
-            className="hidden md:block absolute top-6 left-[12.5%] right-[12.5%] h-px"
-            style={{
-              background:
-                "linear-gradient(90deg, hsla(28, 90%, 60%, 0.25), hsla(270, 70%, 60%, 0.25), hsla(220, 80%, 60%, 0.25), hsla(160, 60%, 50%, 0.25))",
-            }}
-            aria-hidden="true"
-          />
-
-          {/* Connecting line - mobile */}
-          <div
-            className="md:hidden absolute top-0 bottom-0 left-6 w-px"
-            style={{
-              background:
-                "linear-gradient(180deg, hsla(28, 90%, 60%, 0.25), hsla(270, 70%, 60%, 0.25), hsla(220, 80%, 60%, 0.25), hsla(160, 60%, 50%, 0.25))",
-            }}
-            aria-hidden="true"
-          />
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-0">
-            {STEPS.map((step, i) => (
-              <div
-                key={step.title}
-                className="flex md:flex-col items-center md:text-center gap-5 md:gap-0 md:px-4"
-              >
-                <div
-                  className={`w-12 h-12 shrink-0 rounded-full border flex items-center justify-center text-sm font-mono relative bg-white ${STEP_ACCENTS[i]}`}
-                >
-                  {String(i + 1).padStart(2, "0")}
-                </div>
-                <div className="md:mt-4">
-                  <p className="text-slate-800 text-sm font-medium tracking-tight">
-                    {step.title}
-                  </p>
-                  <p className="text-slate-500 text-xs mt-0.5 font-light">
-                    {step.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Key Points */}
-      <div className="grid md:grid-cols-2 gap-5">
-        {KEY_POINTS.map((item) => (
-          <div
-            key={item.title}
-            className="p-7 border border-slate-100 rounded-2xl bg-white/40 backdrop-blur-sm"
-          >
-            <h4 className="text-slate-800 text-sm font-medium mb-2 tracking-tight">
-              {item.title}
-            </h4>
-            <p className="text-slate-500 text-xs leading-relaxed font-light">
-              {item.desc}
-            </p>
-          </div>
-        ))}
-      </div>
+      {STEPS.map((step) => (
+        <Card key={step.num} className="hover:-translate-y-1 hover:border-white/[0.1] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] transition-all duration-200">
+          <CardPanel className="text-center p-8">
+            <span className="text-5xl font-normal text-gradient inline-block">
+              {step.num}
+            </span>
+            <h3 className="text-[17px] font-medium text-[#E6E5E0] mt-4 tracking-tight">{step.title}</h3>
+            <p className="text-[14px] text-[#A49B8B] leading-relaxed mt-2">{step.desc}</p>
+          </CardPanel>
+        </Card>
+      ))}
     </div>
   );
 }

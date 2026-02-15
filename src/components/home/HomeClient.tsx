@@ -8,6 +8,10 @@ import {
   ConsultResultSection,
   HowItWorksSection,
 } from "@/components";
+import { SkeletonLoader } from "@/components/home/SkeletonLoader";
+import { MobileCTA } from "@/components/home/MobileCTA";
+import { ScrollReveal } from "@/components/ui/ScrollReveal";
+import { toastManager } from "@/components/ui/toast";
 import type { EsotericReading } from "@/types/esoteric";
 
 interface ConsultationResult {
@@ -28,7 +32,6 @@ export default function HomeClient() {
   const [question, setQuestion] = useState("");
   const [result, setResult] = useState<ConsultationResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const handleConsult = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,7 +39,6 @@ export default function HomeClient() {
     if (!question.trim()) return;
 
     setIsLoading(true);
-    setError(null);
     setResult(null);
 
     try {
@@ -56,8 +58,21 @@ export default function HomeClient() {
 
       setResult(data);
       setQuestion("");
+      toastManager.add({
+        title: "Consultation terminée",
+        description: "Les flux quantiques ont été interprétés avec succès.",
+        type: "success",
+      });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Une erreur mystérieuse est survenue");
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Une erreur mystérieuse est survenue";
+      toastManager.add({
+        title: "Erreur de consultation",
+        description: message,
+        type: "error",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -66,51 +81,56 @@ export default function HomeClient() {
   if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="w-12 h-12 border-4 border-orange-100 border-t-orange-500 rounded-full animate-spin" />
+        <div
+          className="w-8 h-8 rounded-full border-2 border-transparent animate-spin"
+          style={{
+            borderTopColor: "#4338CA",
+            borderRightColor: "rgba(67, 56, 202, 0.3)",
+          }}
+        />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen text-slate-900 selection:bg-orange-300/30 relative">
-      {/* Mesh gradient background */}
+    <div className="min-h-screen relative">
+      {/* Ambient background */}
       <div className="mesh-gradient" aria-hidden="true" />
+
       <HomeHeroSection isSignedIn={isSignedIn} />
 
-      <main className="pb-24">
+      <main className="pb-32">
         {isSignedIn && (
           <>
-            <ConsultFormSection
-              question={question}
-              setQuestion={setQuestion}
-              onSubmit={handleConsult}
-              isLoading={isLoading}
-            />
+            <ScrollReveal>
+              <ConsultFormSection
+                question={question}
+                setQuestion={setQuestion}
+                onSubmit={handleConsult}
+                isLoading={isLoading}
+              />
+            </ScrollReveal>
 
-            {error && (
-              <div className="max-w-2xl mx-auto px-4 mb-8">
-                <div className="bg-red-50 border border-red-100 rounded-2xl p-4 text-red-600 text-center flex items-center justify-center gap-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {error}
-                </div>
-              </div>
-            )}
+            {isLoading && <SkeletonLoader />}
 
             {result && (
-              <ConsultResultSection
-                response={result.response}
-                quantumData={result.quantumData}
-                esotericReading={result.esotericReading}
-              />
+              <ScrollReveal>
+                <ConsultResultSection
+                  response={result.response}
+                  quantumData={result.quantumData}
+                  esotericReading={result.esotericReading}
+                />
+              </ScrollReveal>
             )}
           </>
         )}
 
-        <HowItWorksSection />
+        <ScrollReveal>
+          <HowItWorksSection />
+        </ScrollReveal>
       </main>
+
+      <MobileCTA />
     </div>
   );
 }
-

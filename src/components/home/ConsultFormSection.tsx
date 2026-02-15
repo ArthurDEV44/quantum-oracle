@@ -1,3 +1,9 @@
+import { Card, CardPanel } from "@/components/ui/card";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
+
 interface ConsultFormSectionProps {
   question: string;
   setQuestion: (val: string) => void;
@@ -12,64 +18,69 @@ export const ConsultFormSection = ({
   isLoading,
 }: ConsultFormSectionProps) => {
   return (
-    <section className="max-w-2xl mx-auto px-6 py-12">
-      <div className="bg-white/50 backdrop-blur-xl border border-white/60 p-8 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.03)] relative overflow-hidden">
-        <form onSubmit={onSubmit} className="space-y-6 relative z-10">
-          <div className="space-y-2">
-            <label
-              htmlFor="oracle-question"
-              className="text-[11px] text-slate-500 ml-1 uppercase tracking-[0.2em] font-mono"
-            >
-              Votre Question
-            </label>
-            <textarea
-              id="oracle-question"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Ex: Quel chemin dois-je emprunter pour trouver la paix ?"
-              className="w-full px-6 py-4 bg-white/60 border border-slate-200/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400/40 focus:border-transparent resize-none text-slate-900 placeholder:text-slate-400 transition-shadow duration-200 min-h-[120px]"
-              disabled={isLoading}
-              maxLength={500}
-            />
-          </div>
+    <section id="consult-form" className="max-w-2xl mx-auto px-6 py-12">
+      <Card>
+        <CardPanel className="p-8 md:p-10">
+          <form onSubmit={onSubmit} className="space-y-6">
+            <Field>
+              <FieldLabel className="text-[13px] text-[#A49B8B] font-medium tracking-wide">
+                Votre question
+              </FieldLabel>
+              <Textarea
+                unstyled
+                className="relative inline-flex w-full rounded-2xl bg-[#111113] text-[#E6E5E0] text-[15px] transition-all duration-200 focus-within:bg-[#161618] focus-within:ring-2 focus-within:ring-violet-400/50 has-disabled:opacity-40 [&_textarea]:min-h-[130px] max-sm:[&_textarea]:min-h-[100px] [&_textarea]:field-sizing-normal [&_textarea]:resize-none [&_textarea]:px-5 [&_textarea]:py-4 [&_textarea]:placeholder:text-[#8A857E] [&_textarea]:outline-none [&_textarea]:w-full [&_textarea]:rounded-[inherit] [&_textarea]:bg-transparent"
+                size="lg"
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                placeholder="Ex: Quel chemin dois-je emprunter pour trouver la paix ?"
+                disabled={isLoading}
+                maxLength={500}
+              />
+              <div className="flex justify-end">
+                <span className="text-[#8A857E] text-[12px]">
+                  {question.length}/500
+                </span>
+              </div>
+            </Field>
 
-          <button
-            type="submit"
-            disabled={isLoading || !question.trim()}
-            className="w-full group relative flex items-center justify-center gap-3 text-white py-4 rounded-xl font-semibold text-base transition-opacity duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-300 focus-visible:ring-offset-2"
-            style={{
-              background:
-                "linear-gradient(135deg, #f97316 0%, #a855f7 60%, #3b82f6 100%)",
-            }}
-          >
-            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            {isLoading ? (
-              <>
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                <span>Interrogation des flux…</span>
-              </>
-            ) : (
-              <>
-                <span>Consulter l&apos;Oracle</span>
-                <svg
-                  className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 5l7 7-7 7M5 5l7 7-7 7"
-                  />
-                </svg>
-              </>
-            )}
-          </button>
-        </form>
-      </div>
+            <Button
+              type="submit"
+              disabled={isLoading || !question.trim()}
+              className="w-full h-auto py-4 rounded-2xl font-semibold text-[15px] text-white border-0 bg-transparent inset-shadow-none before:hidden transition-all duration-150 hover:-translate-y-0.5 hover:shadow-lg active:translate-y-0 active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-violet-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0C0C0C] disabled:opacity-40 shadow-[0_4px_16px_rgba(67,56,202,0.25),0_1px_3px_rgba(0,0,0,0.08)]"
+              style={{
+                background: isLoading
+                  ? "#71717A"
+                  : "linear-gradient(135deg, #4338CA 0%, #6D28D9 50%, #7C3AED 100%)",
+              }}
+            >
+              {isLoading ? (
+                <>
+                  <Spinner className="text-white" />
+                  <span>Interrogation des flux…</span>
+                </>
+              ) : (
+                <>
+                  <span>Consulter l&apos;Oracle</span>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"
+                    />
+                  </svg>
+                </>
+              )}
+            </Button>
+          </form>
+        </CardPanel>
+      </Card>
     </section>
   );
 };
