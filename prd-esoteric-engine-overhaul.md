@@ -218,12 +218,12 @@ Ces commandes doivent passer pour chaque user story :
 **Description:** En tant qu'utilisateur, je veux que les 16 figures de la geomancie arabe (Ilm al-Raml, systematisee aux IXe-Xe siecles) soient integrees avec leurs correspondances planetaires, zodiacales et elementaires, y compris la logique de combinaison par XOR pour calculer le Juge, afin d'exploiter naturellement les 4 bits (nibble) de chaque octet.
 
 **Acceptance Criteria:**
-- [ ] Fichier `src/data/esoteric/geomancy.ts` cree avec 16 figures : numero (0-15), nom arabe original, nom latin medieval, signature binaire (4 caracteres, representant les 4 niveaux Tete/Cou/Corps/Pieds)
-- [ ] Chaque figure a : element, planete, signe zodiacal, signification generale (100-150 mots), signification inversee
-- [ ] Role dans les maisons (Juge, Temoin Droit, Temoin Gauche, Sentence) documente
-- [ ] La logique de combinaison XOR (GF(2)^4) est decrite : Figure Mere 1 XOR Figure Mere 2 = Figure Fille, etc.
-- [ ] Correspondances croisees avec les 4 Elements et les principes hermetiques
-- [ ] Les donnees utilisent `as const satisfies Record<number, GeomancyFigure>`
+- [x] Fichier `src/data/esoteric/geomancy.ts` cree avec 16 figures : numero (0-15), nom arabe original, nom latin medieval, signature binaire (4 caracteres, representant les 4 niveaux Tete/Cou/Corps/Pieds)
+- [x] Chaque figure a : element, planete, signe zodiacal, signification generale (100-150 mots), signification inversee
+- [x] Role dans les maisons (Juge, Temoin Droit, Temoin Gauche, Sentence) documente
+- [x] La logique de combinaison XOR (GF(2)^4) est decrite : Figure Mere 1 XOR Figure Mere 2 = Figure Fille, etc.
+- [x] Correspondances croisees avec les 4 Elements et les principes hermetiques
+- [x] Les donnees utilisent `as const satisfies Record<number, GeomancyFigure>`
 
 ---
 
@@ -232,12 +232,12 @@ Ces commandes doivent passer pour chaque user story :
 **Description:** En tant qu'utilisateur, je veux que les 24 runes de l'Elder Futhark soient integrees avec leurs 3 Aettir, signification droite et inversee (merkstave), correspondances elementaires et divines, afin d'exploiter 5 bits QRNG pour adresser les 24 runes plus un bit d'orientation.
 
 **Acceptance Criteria:**
-- [ ] Fichier `src/data/esoteric/runes.ts` cree avec 24 runes : numero (0-23), nom proto-germanique, glyphe Unicode (si disponible, sinon ASCII), valeur phonetique, numero d'Aett (1 = Freya, 2 = Heimdall, 3 = Tyr)
-- [ ] Chaque rune a : signification droite (150+ mots), signification merkstave/inversee (100+ mots), element, divinite associee
-- [ ] Correspondances elementaires et saisonnieres renseignees
-- [ ] Les 9 runes non-reversibles sont identifiees (champ boolean `isReversible`) : Gebo, Hagalaz, Nauthiz, Isa, Jera, Eihwaz, Sowilo, Ingwaz, Dagaz
-- [ ] Description du poeme runique associe (reference aux 3 poemes : norvegien, islandais, anglo-saxon)
-- [ ] Les donnees utilisent `as const satisfies Record<number, Rune>`
+- [x] Fichier `src/data/esoteric/runes.ts` cree avec 24 runes : numero (0-23), nom proto-germanique, glyphe Unicode (si disponible, sinon ASCII), valeur phonetique, numero d'Aett (1 = Freya, 2 = Heimdall, 3 = Tyr)
+- [x] Chaque rune a : signification droite (150+ mots), signification merkstave/inversee (100+ mots), element, divinite associee
+- [x] Correspondances elementaires et saisonnieres renseignees
+- [x] Les 9 runes non-reversibles sont identifiees (champ boolean `isReversible`) : Gebo, Hagalaz, Nauthiz, Isa, Jera, Eihwaz, Sowilo, Ingwaz, Dagaz
+- [x] Description du poeme runique associe (reference aux 3 poemes : norvegien, islandais, anglo-saxon)
+- [x] Les donnees utilisent `as const satisfies Record<number, Rune>`
 
 ---
 
@@ -248,11 +248,11 @@ Ces commandes doivent passer pour chaque user story :
 **Note historique:** Le modele a 4 stades est le plus ancien (Ier s., Zosime de Panopolis). Les 7 operations sont une classification parmi d'autres (Ripley en comptait 12). On suit la tradition hermetique la plus repandue. Les correspondances planetaires utilisent les attributions classiques (pas Pluton, decouvert en 1930) : Calcination/Mars, Dissolution/Lune, Separation/Scorpion-Mars, Conjunction/Venus, Fermentation/Saturne, Distillation/Mercure, Coagulation/Jupiter.
 
 **Acceptance Criteria:**
-- [ ] Fichier `src/data/esoteric/alchemy.ts` cree avec 4 stades : nom francais, nom latin, couleur, planete/astre, symbolisme (150+ mots), correspondance psychologique (Jung), matiere premiere associee
-- [ ] 7 operations dans le meme fichier : nom francais, nom latin, planete (attributions classiques, pas Pluton), description du processus (150+ mots), numero du stade parent, correspondance avec le principe hermetique
-- [ ] Correspondances croisees avec les 7 principes hermetiques (1 operation = 1 principe)
-- [ ] Correspondances avec les 7 metaux traditionnels (Plomb, Etain, Fer, Or, Cuivre, Mercure, Argent)
-- [ ] Les donnees utilisent `as const satisfies Record<number, AlchemyStage>` et `Record<number, AlchemyOperation>`
+- [x] Fichier `src/data/esoteric/alchemy.ts` cree avec 4 stades : nom francais, nom latin, couleur, planete/astre, symbolisme (150+ mots), correspondance psychologique (Jung), matiere premiere associee
+- [x] 7 operations dans le meme fichier : nom francais, nom latin, planete (attributions classiques, pas Pluton), description du processus (150+ mots), numero du stade parent, correspondance avec le principe hermetique
+- [x] Correspondances croisees avec les 7 principes hermetiques (1 operation = 1 principe)
+- [x] Correspondances avec les 7 metaux traditionnels (Plomb, Etain, Fer, Or, Cuivre, Mercure, Argent)
+- [x] Les donnees utilisent `as const satisfies Record<number, AlchemyStage>` et `Record<number, AlchemyOperation>`
 
 ---
 
@@ -263,11 +263,11 @@ Ces commandes doivent passer pour chaque user story :
 **Note historique:** Les 9 frequences Solfege (174-963 Hz) sont une creation moderne (1970s-1990s, Dr. Joseph Puleo puis Dr. Leonard Horowitz). Seules 6 sont "originales" (396-852 Hz), les 3 autres (174, 285, 963) ont ete ajoutees par extension du patron numerique. Le patron mathematique 3-6-9 des racines numeriques est verifie. La citation attribuee a Tesla ("la magnificence du 3, 6 et 9") n'a pas de source primaire verifiee. Ces frequences n'ont pas d'origine ancienne demontree ni de validation scientifique de leurs proprietes curatives. Les presenter comme un systeme de correspondances numeriques modernes, pas comme une tradition ancienne.
 
 **Acceptance Criteria:**
-- [ ] Fichier `src/data/esoteric/chakras.ts` cree avec 7 chakras : nom sanskrit, nom francais, localisation corporelle, couleur, element, mantra (bija), frequence solfege associee, fonction (physique + spirituelle), description (150+ mots), symptomes de blocage/ouverture
-- [ ] 9 frequences solfege (174, 285, 396, 417, 528, 639, 741, 852, 963 Hz) avec : nom, racine numerique (3, 6 ou 9), description de l'effet, propriete associee. Presentees comme systeme de correspondances numeriques modernes
-- [ ] Correspondances croisees chakra ↔ element ↔ planete ↔ couleur ↔ note musicale
-- [ ] La logique de mapping est documentee : racine numerique de l'octet (somme iteree des chiffres jusqu'a 1 chiffre) → frequence solfege, puis octet % 7 → chakra
-- [ ] Les donnees utilisent `as const satisfies Record<number, Chakra>` et `Record<number, SolfegeFrequency>`
+- [x] Fichier `src/data/esoteric/chakras.ts` cree avec 7 chakras : nom sanskrit, nom francais, localisation corporelle, couleur, element, mantra (bija), frequence solfege associee, fonction (physique + spirituelle), description (150+ mots), symptomes de blocage/ouverture
+- [x] 9 frequences solfege (174, 285, 396, 417, 528, 639, 741, 852, 963 Hz) avec : nom, racine numerique (3, 6 ou 9), description de l'effet, propriete associee. Presentees comme systeme de correspondances numeriques modernes
+- [x] Correspondances croisees chakra ↔ element ↔ planete ↔ couleur ↔ note musicale
+- [x] La logique de mapping est documentee : racine numerique de l'octet (somme iteree des chiffres jusqu'a 1 chiffre) → frequence solfege, puis octet % 7 → chakra
+- [x] Les donnees utilisent `as const satisfies Record<number, Chakra>` et `Record<number, SolfegeFrequency>`
 
 ---
 
@@ -276,14 +276,14 @@ Ces commandes doivent passer pour chaque user story :
 **Description:** En tant qu'utilisateur, je veux que les 22 lettres hebraiques soient integrees avec leurs valeurs numeriques et que tout octet (0-255) puisse etre decompose en une somme de lettres hebraiques formant un "nom sacre", afin de reveler la dimension gematrique du signal quantique.
 
 **Acceptance Criteria:**
-- [ ] Fichier `src/data/esoteric/gematria.ts` cree avec 22 lettres hebraiques : numero (1-22), glyphe hebreu, nom (Aleph, Beth...), valeur phonetique, valeur numerique standard (1-400), signification symbolique (100+ mots), categorie (3 meres / 7 doubles / 12 simples), numero du chemin sur l'Arbre de Vie
-- [ ] Algorithme `decomposeGematria(value: number): HebrewLetter[]` implemente dans le module de lookup
-- [ ] L'algorithme utilise la decomposition gourmande (greedy) : prend la plus grande valeur de lettre possible en descendant (400, 300, 200, 100, 90, 80... 1)
-- [ ] **Cas speciaux geres** : 15 s'ecrit Tet+Vav (9+6) au lieu de Yod+He (10+5), et 16 s'ecrit Tet+Zayin (9+7) au lieu de Yod+Vav (10+6), pour eviter d'epeler des noms divins (tradition standard des numeros hebraiques)
-- [ ] Chaque decomposition produit un "mot sacre" lisible (concatenation des glyphes)
-- [ ] La somme des valeurs des lettres retournees egale exactement la valeur d'entree
-- [ ] Valeurs speciales documentees (26 = YHVH, 72 = Shem HaMephorash, etc.)
-- [ ] Les donnees utilisent `as const satisfies Record<number, HebrewLetter>`
+- [x] Fichier `src/data/esoteric/gematria.ts` cree avec 22 lettres hebraiques : numero (1-22), glyphe hebreu, nom (Aleph, Beth...), valeur phonetique, valeur numerique standard (1-400), signification symbolique (100+ mots), categorie (3 meres / 7 doubles / 12 simples), numero du chemin sur l'Arbre de Vie
+- [x] Algorithme `decomposeGematria(value: number): HebrewLetter[]` implemente dans le module de lookup
+- [x] L'algorithme utilise la decomposition gourmande (greedy) : prend la plus grande valeur de lettre possible en descendant (400, 300, 200, 100, 90, 80... 1)
+- [x] **Cas speciaux geres** : 15 s'ecrit Tet+Vav (9+6) au lieu de Yod+He (10+5), et 16 s'ecrit Tet+Zayin (9+7) au lieu de Yod+Vav (10+6), pour eviter d'epeler des noms divins (tradition standard des numeros hebraiques)
+- [x] Chaque decomposition produit un "mot sacre" lisible (concatenation des glyphes)
+- [x] La somme des valeurs des lettres retournees egale exactement la valeur d'entree
+- [x] Valeurs speciales documentees (26 = YHVH, 72 = Shem HaMephorash, etc.)
+- [x] Les donnees utilisent `as const satisfies Record<number, HebrewLetter>`
 
 ---
 
@@ -292,15 +292,15 @@ Ces commandes doivent passer pour chaque user story :
 **Description:** En tant que developpeur, je veux que le systeme QRNG demande 16 octets au lieu de 8 afin de disposer de 128 bits pour adresser les 13 traditions sans chevauchement ni reutilisation de bits.
 
 **Acceptance Criteria:**
-- [ ] La constante `CONFIG.quantumBytes` dans `src/app/api/consult/route.ts` passe de 8 a 16
-- [ ] Le provider LfD demande correctement 16 octets (parametre `length=16`)
-- [ ] Le provider NIST retourne suffisamment de donnees (son beacon fournit 64 octets, pas de changement necessaire)
-- [ ] Le fallback Web Crypto genere 16 octets
-- [ ] La grille d'affichage des octets dans le TechnicalTab est adaptee (grid-cols-8 sur 2 lignes au lieu d'1)
-- [ ] Le texte "8 Bytes" est mis a jour en "16 Bytes" dans l'UI
-- [ ] La validation dans `calculateEsotericReading` accepte un minimum de 16 octets
-- [ ] Les tests existants (s'il y en a) sont mis a jour
-- [ ] La deduplication de requetes (`pendingRequests`) fonctionne toujours correctement
+- [x] La constante `CONFIG.quantumBytes` dans `src/app/api/consult/route.ts` passe de 8 a 16
+- [x] Le provider LfD demande correctement 16 octets (parametre `length=16`)
+- [x] Le provider NIST retourne suffisamment de donnees (son beacon fournit 64 octets, pas de changement necessaire)
+- [x] Le fallback Web Crypto genere 16 octets
+- [x] La grille d'affichage des octets dans le TechnicalTab est adaptee (grid-cols-8 sur 2 lignes au lieu d'1)
+- [x] Le texte "8 Bytes" est mis a jour en "16 Bytes" dans l'UI
+- [x] La validation dans `calculateEsotericReading` accepte un minimum de 16 octets
+- [x] Les tests existants (s'il y en a) sont mis a jour
+- [x] La deduplication de requetes (`pendingRequests`) fonctionne toujours correctement
 
 ---
 
@@ -309,8 +309,8 @@ Ces commandes doivent passer pour chaque user story :
 **Description:** En tant que developpeur, je veux remplacer le moteur `calculateEsotericReading` actuel (base sur `sum % N`) par un moteur qui lit directement les bits des 16 octets QRNG pour adresser chaque tradition a son echelle native, afin que la structure binaire du signal quantique soit preservee et que chaque tradition recoive ses bits dedies.
 
 **Acceptance Criteria:**
-- [ ] Le fichier `src/lib/esoteric.ts` est refactore avec le nouveau moteur
-- [ ] Plan d'allocation des bits documente dans un commentaire en tete de fichier, par exemple :
+- [x] Le fichier `src/lib/esoteric.ts` est refactore avec le nouveau moteur
+- [x] Plan d'allocation des bits documente dans un commentaire en tete de fichier, par exemple :
   - Octet 0 (8 bits) : Ifa Odu (256 signes, mapping 1:1)
   - Octet 1 bits 0-5 (6 bits) : Yi Jing hexagramme (64, via 2 trigrammes de 3 bits)
   - Octet 1 bits 6-7 + Octet 2 bits 0-3 (6 bits) : Yi Jing lignes mutantes
@@ -327,12 +327,12 @@ Ces commandes doivent passer pour chaque user story :
   - Octets 8-11 (4 octets) : Elements — 1 octet par element, distribution proportionnelle
   - Octets 12-13 (2 octets) : Geometrie sacree — ratios consecutifs vs Phi
   - Octets 14-15 (2 octets) : Synthese — energie, polarite, phase, ton cosmique
-- [ ] Pour les traditions a cardinalite non-puissance-de-2 (Tarot 22, Runes 24, Hermetisme 7, Alchimie operation 7, Chakra 7), le mapping utilise un scaling ou rejection plutot qu'un modulo biaise
-- [ ] Fonctions utilitaires d'extraction de bits : `extractBits(bytes, startBit, numBits): number`
-- [ ] Le moteur utilise le module de lookup (US-002) qui importe les constantes TypeScript
-- [ ] L'interface `QuantumEsotericReading` est etendue avec les 6 nouvelles traditions
-- [ ] La fonction `generateEsotericContext` est mise a jour pour inclure toutes les traditions dans le texte envoye au LLM
-- [ ] Chaque tradition recoit des bits dedies — aucun bit n'est utilise par deux traditions (sauf Elements/Geometrie/Synthese qui utilisent des octets entiers)
+- [x] Pour les traditions a cardinalite non-puissance-de-2 (Tarot 22, Runes 24, Hermetisme 7, Alchimie operation 7, Chakra 7), le mapping utilise un scaling ou rejection plutot qu'un modulo biaise
+- [x] Fonctions utilitaires d'extraction de bits : `extractBits(bytes, startBit, numBits): number`
+- [x] Le moteur utilise le module de lookup (US-002) qui importe les constantes TypeScript
+- [x] L'interface `QuantumEsotericReading` est etendue avec les 6 nouvelles traditions
+- [x] La fonction `generateEsotericContext` est mise a jour pour inclure toutes les traditions dans le texte envoye au LLM
+- [x] Chaque tradition recoit des bits dedies — aucun bit n'est utilise par deux traditions (sauf Elements/Geometrie/Synthese qui utilisent des octets entiers)
 
 ---
 
@@ -341,7 +341,7 @@ Ces commandes doivent passer pour chaque user story :
 **Description:** En tant qu'utilisateur, je veux que les traditions soient liees entre elles par des correspondances authentiques (ex: Arcane du Tarot ↔ Chemin kabbalistique ↔ Lettre hebraique ↔ Signe zodiacal), afin de reveler la coherence profonde entre les differents systemes.
 
 **Acceptance Criteria:**
-- [ ] Fichier `src/data/esoteric/correspondences.ts` cree avec les correspondances canoniques encodees en TypeScript :
+- [x] Fichier `src/data/esoteric/correspondences.ts` cree avec les correspondances canoniques encodees en TypeScript :
   - 22 Arcanes ↔ 22 Chemins ↔ 22 Lettres hebraiques (tradition Golden Dawn)
   - 7 Principes hermetiques ↔ 7 Operations alchimiques ↔ 7 Planetes ↔ 7 Metaux ↔ 7 Chakras
   - 4 Elements ↔ 4 Stades alchimiques ↔ 4 directions ↔ 4 saisons
@@ -349,9 +349,9 @@ Ces commandes doivent passer pour chaque user story :
   - Odu Ifa ↔ Hexagramme Yi Jing (correspondances via la signature binaire partagee pour les 6 premiers bits)
   - Figures geomantiques ↔ Elements ↔ Planetes
   - Runes ↔ Elements ↔ Saisons
-- [ ] Fonction `getReadingCorrespondences(reading: QuantumEsotericReading)` dans le module de lookup qui, a partir d'une lecture complete, extrait toutes les correspondances croisees entre les traditions obtenues
-- [ ] Le resultat met en evidence les "resonances" : quand plusieurs traditions pointent vers le meme element, la meme planete ou le meme archetype, c'est signale comme une convergence significative
-- [ ] Type `Correspondences` avec champs `convergences` (archetypes partages) et `links` (relations directes entre traditions)
+- [x] Fonction `getReadingCorrespondences(reading: QuantumEsotericReading)` dans le module de lookup qui, a partir d'une lecture complete, extrait toutes les correspondances croisees entre les traditions obtenues
+- [x] Le resultat met en evidence les "resonances" : quand plusieurs traditions pointent vers le meme element, la meme planete ou le meme archetype, c'est signale comme une convergence significative
+- [x] Type `Correspondences` avec champs `convergences` (archetypes partages) et `links` (relations directes entre traditions)
 
 ---
 
@@ -362,12 +362,12 @@ Ces commandes doivent passer pour chaque user story :
 **Recherche "Lost in the Middle" :** Les LLM pretent plus attention au debut et a la fin du prompt, moins au milieu. Placer les convergences croisees en debut de contexte et la question du consultant en fin.
 
 **Acceptance Criteria:**
-- [ ] Le system prompt Mistral (`src/lib/mistral/prompts.ts`) est mis a jour :
+- [x] Le system prompt Mistral (`src/lib/mistral/prompts.ts`) est mis a jour :
   - Mentionne les 13 traditions (pas seulement 4)
   - Ajoute le cadre philosophique (Ordre Implique, "It from Bit")
   - Augmente la limite de mots si necessaire pour integrer la richesse (evaluer 50 → 80-100 mots)
   - Conserve le ton mystique mais accessible et la reponse en francais
-- [ ] Le `buildUserPrompt` est mis a jour pour inclure dans le contexte esoterique :
+- [x] Le `buildUserPrompt` est mis a jour pour inclure dans le contexte esoterique :
   - Ifa Odu (nom + signification + proverbe)
   - Geomancie (figure + element + planete)
   - Rune (nom + signification + orientation)
@@ -375,9 +375,9 @@ Ces commandes doivent passer pour chaque user story :
   - Chakra (nom + frequence solfege)
   - Gematria (mot sacre + valeur)
   - Les convergences croisees detectees
-- [ ] La `generateEsotericContext` dans `src/lib/esoteric.ts` accepte un parametre de niveau (`rich` | `condensed`) et produit un texte structure adapte. Le niveau riche (~2500 tokens, ~100 mots par tradition) est utilise par defaut pour Mistral Small API
-- [ ] **Hierarchisation du contexte** : convergences croisees en premier (debut du prompt), puis traditions individuelles, puis question du consultant en dernier (fin du prompt) — exploite la courbe d'attention en U des LLM
-- [ ] Le format du contexte reste en Markdown/plain-text avec labels clairs (pas de JSON ni XML dans le prompt — token-inefficace et degrade la qualite des modeles)
+- [x] La `generateEsotericContext` dans `src/lib/esoteric.ts` accepte un parametre de niveau (`rich` | `condensed`) et produit un texte structure adapte. Le niveau riche (~2500 tokens, ~100 mots par tradition) est utilise par defaut pour Mistral Small API
+- [x] **Hierarchisation du contexte** : convergences croisees en premier (debut du prompt), puis traditions individuelles, puis question du consultant en dernier (fin du prompt) — exploite la courbe d'attention en U des LLM
+- [x] Le format du contexte reste en Markdown/plain-text avec labels clairs (pas de JSON ni XML dans le prompt — token-inefficace et degrade la qualite des modeles)
 
 ---
 
@@ -386,18 +386,18 @@ Ces commandes doivent passer pour chaque user story :
 **Description:** En tant que developpeur, je veux que la route API retourne la lecture enrichie avec les 13 traditions et les correspondances, afin que le frontend ait toutes les donnees necessaires pour la nouvelle UI.
 
 **Acceptance Criteria:**
-- [ ] `CONFIG.quantumBytes` est a 16
-- [ ] L'objet `esotericReading` dans la reponse JSON inclut les 6 nouvelles traditions :
+- [x] `CONFIG.quantumBytes` est a 16
+- [x] L'objet `esotericReading` dans la reponse JSON inclut les 6 nouvelles traditions :
   - `ifa: { odu, name, meaning, proverb, orisha }`
   - `geomancy: { figure1, figure2, judge, element, planet }`
   - `runes: { rune, name, glyph, meaning, orientation, aett }`
   - `alchemy: { stage, operation, planet }`
   - `chakras: { chakra, name, frequency, mantra }`
   - `gematria: { value, sacredWord, letters[] }`
-- [ ] Les correspondances croisees sont incluses : `correspondences: { convergences: [], links: [] }`
-- [ ] Le champ `quantumData.numbers` retourne un tableau de 16 elements
-- [ ] La retrocompatibilite est maintenue pour les consultations existantes en base (les anciennes lectures a 8 octets restent lisibles)
-- [ ] Le type `ResponseData` est mis a jour
+- [x] Les correspondances croisees sont incluses : `correspondences: { convergences: [], links: [] }`
+- [x] Le champ `quantumData.numbers` retourne un tableau de 16 elements
+- [x] La retrocompatibilite est maintenue pour les consultations existantes en base (les anciennes lectures a 8 octets restent lisibles)
+- [x] Le type `ResponseData` est mis a jour
 
 ---
 
@@ -406,16 +406,16 @@ Ces commandes doivent passer pour chaque user story :
 **Description:** En tant qu'utilisateur, je veux que l'affichage des resultats soit reorganise en onglets refletant la nouvelle architecture en couches de lecture (signal brut → traditions divinatoires → sagesse esoterique → resonances → synthese), afin de naviguer intuitivement dans la richesse de l'interpretation.
 
 **Acceptance Criteria:**
-- [ ] L'ancien systeme a 3 onglets (Synthesis, Technical, Traditions) est remplace par une nouvelle architecture
-- [ ] Nouvel onglet **"Signal Quantique"** : octets bruts (hex + decimal), visualisation binaire bit-par-bit montrant quel bit alimente quelle tradition, statistiques (somme, moyenne, variance), source QRNG
-- [ ] Nouvel onglet **"Traditions Divinatoires"** : Yi Jing (hexagramme + trigrammes + lignes mutantes), Ifa (Odu + proverbe + Orisha), Geomancie (figures + juge), Elder Futhark (rune + orientation + Aett)
-- [ ] Nouvel onglet **"Sagesse Esoterique"** : Tarot (arcane + symbolisme), Kabbale (Sefirah + chemin), Hermetisme (principe + axiome), Alchimie (stade + operation)
-- [ ] Nouvel onglet **"Resonances"** : Elements (distribution + dominant), Chakras (chakra + frequence solfege + mantra), Geometrie Sacree (Phi resonance + Fibonacci), Gematria (mot sacre + decomposition)
-- [ ] Nouvel onglet **"Synthese de l'Ordre Implique"** : energie cosmique, polarite, phase, ton cosmique, carte des convergences croisees entre traditions (quand plusieurs traditions pointent vers le meme archetype/element/planete)
-- [ ] Chaque tradition affiche un lien "Voir le calcul" (details) montrant les bits extraits et le mapping
-- [ ] Navigation fluide entre onglets (animation de transition)
-- [ ] Responsive : onglets scrollables horizontalement sur mobile
-- [ ] Les types `EsotericReading` et `QuantumData` dans `src/types/esoteric.ts` sont mis a jour pour refletent les 13 traditions
+- [x] L'ancien systeme a 3 onglets (Synthesis, Technical, Traditions) est remplace par une nouvelle architecture
+- [x] Nouvel onglet **"Signal Quantique"** : octets bruts (hex + decimal), visualisation binaire bit-par-bit montrant quel bit alimente quelle tradition, statistiques (somme, moyenne, variance), source QRNG
+- [x] Nouvel onglet **"Traditions Divinatoires"** : Yi Jing (hexagramme + trigrammes + lignes mutantes), Ifa (Odu + proverbe + Orisha), Geomancie (figures + juge), Elder Futhark (rune + orientation + Aett)
+- [x] Nouvel onglet **"Sagesse Esoterique"** : Tarot (arcane + symbolisme), Kabbale (Sefirah + chemin), Hermetisme (principe + axiome), Alchimie (stade + operation)
+- [x] Nouvel onglet **"Resonances"** : Elements (distribution + dominant), Chakras (chakra + frequence solfege + mantra), Geometrie Sacree (Phi resonance + Fibonacci), Gematria (mot sacre + decomposition)
+- [x] Nouvel onglet **"Synthese de l'Ordre Implique"** : energie cosmique, polarite, phase, ton cosmique, carte des convergences croisees entre traditions (quand plusieurs traditions pointent vers le meme archetype/element/planete)
+- [x] Chaque tradition affiche un lien "Voir le calcul" (details) montrant les bits extraits et le mapping
+- [x] Navigation fluide entre onglets (animation de transition)
+- [x] Responsive : onglets scrollables horizontalement sur mobile
+- [x] Les types `EsotericReading` et `QuantumData` dans `src/types/esoteric.ts` sont mis a jour pour refletent les 13 traditions
 
 ---
 
@@ -424,15 +424,15 @@ Ces commandes doivent passer pour chaque user story :
 **Description:** En tant qu'utilisateur, je veux des composants visuels dedies pour chaque nouvelle tradition (Ifa, Geomancie, Runes, Alchimie, Chakras, Gematria), coherents avec le design system existant (cards blanches, backdrop-blur, border-slate, typographie mono).
 
 **Acceptance Criteria:**
-- [ ] Composant `IfaCard` : affiche le nom de l'Odu, la signature binaire (8 points), l'Orisha patron, un proverbe Yoruba en italique, la signification. Design avec border-amber
-- [ ] Composant `GeomancyCard` : affiche les 2 figures meres (representation visuelle des 4 niveaux en points : * ou * *), la figure Juge (XOR), element + planete. Design avec border-rose
-- [ ] Composant `RuneCard` : affiche le glyphe de la rune (grande taille), nom + Aett, signification (droite ou merkstave selon bit d'orientation), element + divinite. Design avec border-cyan
-- [ ] Composant `AlchemyCard` : affiche le stade (avec couleur : noir/blanc/jaune/rouge) + l'operation, planete + metal, symbolisme. Design avec border-yellow
-- [ ] Composant `ChakraCard` : affiche le chakra (nom sanskrit + couleur), localisation, mantra, frequence solfege (Hz), barre de frequence coloree. Design avec border-indigo
-- [ ] Composant `GematriaCard` : affiche la valeur numerique, le mot sacre en hebreu (grande taille), la decomposition lettre par lettre avec valeurs. Design avec border-sky
-- [ ] Composant `ConvergenceMap` : affiche les correspondances croisees entre traditions obtenues dans la lecture actuelle, met en evidence les convergences (meme element, planete, archetype). Design special avec gradient
-- [ ] Tous les composants suivent le pattern existant : card avec `bg-white/40 backdrop-blur-sm border rounded-2xl`, titres en `font-mono uppercase tracking-[0.15em]`, details collapsibles pour les calculs
-- [ ] Chaque composant est dans `src/components/home/tabs/cards/`
+- [x] Composant `IfaCard` : affiche le nom de l'Odu, la signature binaire (8 points), l'Orisha patron, un proverbe Yoruba en italique, la signification. Design avec border-amber
+- [x] Composant `GeomancyCard` : affiche les 2 figures meres (representation visuelle des 4 niveaux en points : * ou * *), la figure Juge (XOR), element + planete. Design avec border-rose
+- [x] Composant `RuneCard` : affiche le glyphe de la rune (grande taille), nom + Aett, signification (droite ou merkstave selon bit d'orientation), element + divinite. Design avec border-cyan
+- [x] Composant `AlchemyCard` : affiche le stade (avec couleur : noir/blanc/jaune/rouge) + l'operation, planete + metal, symbolisme. Design avec border-yellow
+- [x] Composant `ChakraCard` : affiche le chakra (nom sanskrit + couleur), localisation, mantra, frequence solfege (Hz), barre de frequence coloree. Design avec border-indigo
+- [x] Composant `GematriaCard` : affiche la valeur numerique, le mot sacre en hebreu (grande taille), la decomposition lettre par lettre avec valeurs. Design avec border-sky
+- [x] Composant `ConvergenceMap` : affiche les correspondances croisees entre traditions obtenues dans la lecture actuelle, met en evidence les convergences (meme element, planete, archetype). Design special avec gradient
+- [x] Tous les composants suivent le pattern existant : card avec `bg-white/40 backdrop-blur-sm border rounded-2xl`, titres en `font-mono uppercase tracking-[0.15em]`, details collapsibles pour les calculs
+- [x] Chaque composant est dans `src/components/home/tabs/cards/`
 
 ---
 
@@ -441,16 +441,16 @@ Ces commandes doivent passer pour chaque user story :
 **Description:** En tant que developpeur, je veux un script de validation qui verifie l'integrite et la completude de toutes les donnees esoteriques TypeScript, et une documentation decrivant le plan d'allocation des bits.
 
 **Acceptance Criteria:**
-- [ ] Script `scripts/validate-esoteric-data.ts` qui verifie :
+- [x] Script `scripts/validate-esoteric-data.ts` qui verifie :
   1. Toutes les traditions ont le bon nombre d'entrees (8 trigrams, 64 hexagrams, 22 arcanes, 10 sefirot, 22 chemins, 7 principes, 4 elements, 256 odu, 16 figures, 24 runes, 4 stades, 7 operations, 7 chakras, 9 frequences, 22 lettres)
   2. Les references croisees sont coherentes (ex: chaque chemin reference un numero de sefirah valide, chaque arcane reference un chemin valide)
   3. Les signatures binaires Ifa couvrent tous les 256 patterns (0-255)
   4. Les signatures binaires Geomancie couvrent les 16 patterns (0-15)
   5. Les correspondances croisees n'ont pas de references orphelines
   6. Chaque description a la longueur minimale requise
-- [ ] Commande `bun run validate:data` ajoutee dans `package.json`
-- [ ] Le script affiche un rapport de validation (OK/ERREUR par tradition, nombre d'entrees, references manquantes)
-- [ ] Commentaire detaille en tete de `src/lib/esoteric.ts` documentant le plan d'allocation des 128 bits (16 octets) avec les traditions adressees
+- [x] Commande `bun run validate:data` ajoutee dans `package.json`
+- [x] Le script affiche un rapport de validation (OK/ERREUR par tradition, nombre d'entrees, references manquantes)
+- [x] Commentaire detaille en tete de `src/lib/esoteric.ts` documentant le plan d'allocation des 128 bits (16 octets) avec les traditions adressees
 
 ---
 
