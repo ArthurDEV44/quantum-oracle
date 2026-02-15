@@ -18,7 +18,7 @@ export const CONFIG = {
   retryJitter: 0.5,
 
   // Model parameters
-  maxTokens: 150,
+  maxTokens: 250,
   topP: 0.85,
 } as const;
 

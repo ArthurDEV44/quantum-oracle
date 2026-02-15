@@ -9,6 +9,7 @@ import {
   isMistralConfigured,
   type QuantumConstraints,
 } from "@/lib/mistral";
+import { getReadingCorrespondences } from "@/lib/esoteric-lookup";
 import { getOrCreateUser } from "@/lib/user";
 import { saveConsultation } from "@/lib/consultations";
 
@@ -17,7 +18,7 @@ const CONFIG = {
   requestTimeout: 45000, // 45s max for entire request
   maxQuestionLength: 500,
   minQuestionLength: 3,
-  quantumBytes: 8,
+  quantumBytes: 16,
 };
 
 const isDev = process.env.NODE_ENV === "development";
@@ -171,6 +172,9 @@ export async function POST(request: Request) {
 
     // Build esoteric summary for response
     const esoteric = constraints?.esoteric;
+    const correspondences = esoteric
+      ? getReadingCorrespondences(esoteric)
+      : undefined;
 
     return NextResponse.json({
       id: consultation.id,
@@ -183,6 +187,7 @@ export async function POST(request: Request) {
         generatedBy,
         energy: constraints?.energy,
         category: constraints?.category,
+        variance: esoteric?.quantum?.variance,
       },
       esotericReading: esoteric
         ? {
@@ -191,33 +196,106 @@ export async function POST(request: Request) {
               name: esoteric.iChing.hexagramName,
               symbol: esoteric.iChing.hexagramSymbol,
               meaning: esoteric.iChing.meaning,
+              upperTrigram: {
+                name: esoteric.iChing.upperTrigram.name,
+                symbol: esoteric.iChing.upperTrigram.symbol,
+                element: esoteric.iChing.upperTrigram.element,
+              },
+              lowerTrigram: {
+                name: esoteric.iChing.lowerTrigram.name,
+                symbol: esoteric.iChing.lowerTrigram.symbol,
+                element: esoteric.iChing.lowerTrigram.element,
+              },
+              mutatingLines: esoteric.iChing.mutatingLines,
+              transformedHexagram: esoteric.iChing.transformedHexagramNumber,
+              transformedHexagramName: esoteric.iChing.transformedHexagramName,
+              transformedHexagramSymbol: esoteric.iChing.transformedHexagramSymbol,
             },
             tarot: {
               arcana: esoteric.tarot.arcanaNumber,
               name: esoteric.tarot.arcanaName,
               symbol: esoteric.tarot.arcanaSymbol,
               keywords: esoteric.tarot.keywords,
+              meaning: esoteric.tarot.meaning,
             },
             kabbalah: {
               sefirah: esoteric.kabbalah.sefirahNumber,
               name: esoteric.kabbalah.sefirahName,
               hebrew: esoteric.kabbalah.sefirahHebrew,
               attribute: esoteric.kabbalah.attribute,
+              meaning: esoteric.kabbalah.meaning,
+              pathNumber: esoteric.kabbalah.pathNumber,
+              pathLetterName: esoteric.kabbalah.pathLetterName,
+              pathMeaning: esoteric.kabbalah.pathMeaning,
             },
             hermetic: {
               principle: esoteric.hermetic.principleNumber,
               name: esoteric.hermetic.principleName,
               axiom: esoteric.hermetic.axiom,
+              meaning: esoteric.hermetic.meaning,
             },
             elements: {
               dominant: esoteric.elements.dominant,
               balance: esoteric.elements.balance,
+              distribution: esoteric.elements.distribution,
             },
             sacredGeometry: {
               phiResonance: esoteric.sacredGeometry.phiResonance,
               harmonicFrequency: esoteric.sacredGeometry.harmonicFrequency,
+              fibonacciAlignment: esoteric.sacredGeometry.fibonacciAlignment,
             },
             synthesis: esoteric.synthesis,
+            ifa: {
+              odu: esoteric.ifa.oduNumber,
+              name: esoteric.ifa.oduName,
+              meaning: esoteric.ifa.meaning,
+              proverb: esoteric.ifa.proverb,
+              orisha: esoteric.ifa.orisha,
+              element: esoteric.ifa.element,
+            },
+            geomancy: {
+              figure1: esoteric.geomancy.figure1Name,
+              figure2: esoteric.geomancy.figure2Name,
+              judge: esoteric.geomancy.judgeName,
+              element: esoteric.geomancy.element,
+              planet: esoteric.geomancy.planet,
+              figure1Number: esoteric.geomancy.figure1Number,
+              figure2Number: esoteric.geomancy.figure2Number,
+              judgeNumber: esoteric.geomancy.judgeNumber,
+            },
+            runes: {
+              rune: esoteric.runes.runeNumber,
+              name: esoteric.runes.runeName,
+              glyph: esoteric.runes.runeGlyph,
+              meaning: esoteric.runes.meaning,
+              orientation: esoteric.runes.orientation,
+              aett: esoteric.runes.aettNumber,
+              element: esoteric.runes.element,
+              deity: esoteric.runes.deity,
+            },
+            alchemy: {
+              stage: esoteric.alchemy.stageName,
+              stageLatin: esoteric.alchemy.stageLatin,
+              stageColor: esoteric.alchemy.stageColor,
+              operation: esoteric.alchemy.operationName,
+              operationLatin: esoteric.alchemy.operationLatin,
+              planet: esoteric.alchemy.planet,
+            },
+            chakras: {
+              chakra: esoteric.chakras.chakraNumber,
+              name: esoteric.chakras.chakraNameSanskrit,
+              nameFrench: esoteric.chakras.chakraNameFrench,
+              frequency: esoteric.chakras.solfegeFrequencyHz,
+              mantra: esoteric.chakras.mantra,
+              color: esoteric.chakras.color,
+              element: esoteric.chakras.element,
+            },
+            gematria: {
+              value: esoteric.gematria.value,
+              sacredWord: esoteric.gematria.sacredWord,
+              letters: esoteric.gematria.letters,
+            },
+            correspondences,
           }
         : undefined,
       createdAt: consultation.createdAt,

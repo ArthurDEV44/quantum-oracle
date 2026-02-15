@@ -99,3 +99,26 @@ export { CHAKRAS, SOLFEGE_FREQUENCIES } from "./chakras";
 
 // Gematria
 export { HEBREW_LETTERS } from "./gematria";
+
+// Correspondences
+export {
+  TAROT_PATH_LETTER,
+  SEPTENARY,
+  QUATERNARY,
+  ZODIAC_LETTER,
+  TAROT_PATH_LETTER_BY_TAROT,
+  TAROT_PATH_LETTER_BY_PATH,
+  SEPTENARY_BY_HERMETIC,
+  SEPTENARY_BY_OPERATION,
+  SEPTENARY_BY_PLANET,
+  QUATERNARY_BY_ELEMENT,
+  QUATERNARY_BY_STAGE,
+  ZODIAC_LETTER_BY_ZODIAC,
+  getIfaHexagramCorrespondence,
+} from "./correspondences";
+export type {
+  TarotPathLetterEntry,
+  SeptenaryEntry,
+  QuaternaryEntry,
+  ZodiacLetterEntry,
+} from "./correspondences";

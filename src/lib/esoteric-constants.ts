@@ -6,12 +6,12 @@ export const ELEMENT_SYMBOLS: Record<string, { symbol: string; color: string }> 
 };
 
 export const DERIVATION_EXPLANATIONS = {
-  iChing: "Les 6 premiers bytes quantiques génèrent les lignes yin/yang. Les bits de poids faible (pair=yin, impair=yang) forment deux trigrammes qui déterminent l'hexagramme.",
-  tarot: "La somme de tous les bytes quantiques, modulo 22, détermine l'arcane majeur. Chaque carte représente un archétype universel.",
-  kabbalah: "La somme des bytes, modulo 10, pointe vers une des 10 Sefirot de l'Arbre de Vie, représentant différentes émanations divines.",
-  hermetic: "La somme des bytes, modulo 7, révèle un des 7 principes hermétiques du Kybalion, lois universelles de la réalité.",
-  elements: "Chaque byte quantique (0-3) correspond à un élément. Leur proportion relative détermine l'équilibre élémentaire.",
-  sacredGeometry: "Le ratio entre bytes consécutifs est comparé au nombre d'or (φ ≈ 1.618). Plus le ratio est proche, plus la résonance est élevée.",
-  energy: "La moyenne des bytes, normalisée entre 0 et 1, représente le niveau d'énergie cosmique de la lecture.",
-  polarity: "Le ratio de bytes pairs (yin) vs impairs (yang) détermine la polarité énergétique dominante.",
+  iChing: "L'octet 1 (bits 8-13) est lu comme 2 trigrammes de 3 bits formant l'hexagramme. Les bits 14-19 déterminent les lignes mutantes.",
+  tarot: "Les bits 28-32 (5 bits) de l'octet 3-4 sont scalés de 32 vers 22 pour adresser un arcane majeur sans biais de modulo.",
+  kabbalah: "Les bits 33-37 (5 bits) adressent les 10 Sefirot (0-9) ou les 22 chemins (10-31) de l'Arbre de Vie.",
+  hermetic: "Les bits 38-40 (3 bits) sont scalés de 8 vers 7 pour adresser un des 7 principes hermétiques du Kybalion.",
+  elements: "Les octets 8-11 (1 par élément) déterminent la distribution proportionnelle des 4 éléments.",
+  sacredGeometry: "Le ratio entre les octets 12-13 est comparé au nombre d'or (φ ≈ 1.618). Plus le ratio est proche, plus la résonance est élevée.",
+  energy: "Les octets 14-15 sont combinés pour calculer l'énergie cosmique, la polarité et la phase de la lecture.",
+  polarity: "La différence entre les octets 14 et 15 détermine la polarité : yang (>32), yin (<-32), ou équilibrée.",
 } as const;
